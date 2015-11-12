@@ -1,0 +1,26 @@
+{
+  "ecmaFeatures": {
+    "blockBindings": true,
+    "jsx": true,
+    "modules": true,
+    "arrowFunctions": true,
+    "classes": true
+  },
+
+  "env": {
+    "browser": false,
+    "node": true,
+    "mocha": true
+  },
+
+  "globals": {
+  },
+
+  "plugins": [
+    "react"
+  ],
+
+  "rules": {
+    "quotes": [2, "single"]
+  }
+}
