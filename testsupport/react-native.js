@@ -16,6 +16,4 @@ ReactNative.Text = Text;
 ReactNative.TouchableWithoutFeedback = View;
 ReactNative.Navigator = Navigator;
 
-ReactNative.noCallThru = true;
-
 export default ReactNative;

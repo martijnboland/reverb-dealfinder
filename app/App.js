@@ -1,32 +1,18 @@
-var React = require('react-native');
-var { View, Text, StyleSheet } = React;
+import React, { Component } from 'react-native';
+import { createStore, combineReducers } from 'redux';
+import { Provider } from 'react-redux/native';
 
-//import React, { View, Text, StyleSheet } from 'react-native';
-import { colors } from '../styles/global';
+import routerReducer from './shared/router/routerReducer';
+import DealFinder from './DealFinder';
 
-class App extends React.Component {
+const store = createStore(combineReducers( { router: routerReducer }));
 
+export default class App extends Component {
   render() {
     return (
-      <View style={styles.container}>
-        <Text>Reverb Deal Finder</Text>
-      </View>
+      <Provider store={store}>
+        {() => <DealFinder />}
+      </Provider>
     );
   }
-
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#B71817',
-    paddingTop: 20,
-  },
-  navigator: {
-    flex: 1,
-    backgroundColor: colors.mainBackground
-  }
-});
-
-
-export default App;
