@@ -4,12 +4,16 @@
   "private": true,
   "scripts": {
     "start": "react-native start",
-    "test": "mocha ./**/*.spec.js --compilers js:babel/register"
+    "test": "mocha 'app/**/*.spec.js' --compilers js:babel/register",
+    "test:debug": "npm run test -- --debug-brk"
   },
   "dependencies": {
+    "isomorphic-fetch": "^2.2.0",
     "react-native": "^0.14.2",
     "react-redux": "^3.1.0",
-    "redux": "^3.0.4"
+    "redux": "^3.0.4",
+    "redux-logger": "^2.0.4",
+    "redux-thunk": "^1.0.0"
   },
   "devDependencies": {
     "babel": "^5.8.34",
@@ -20,6 +24,7 @@
     "eslint": "^1.9.0",
     "eslint-plugin-react": "^3.8.0",
     "mocha": "^2.3.3",
+    "nock": "^3.0.0",
     "react": "^0.14.2"
   }
 }

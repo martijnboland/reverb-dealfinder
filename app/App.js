@@ -1,11 +1,11 @@
 import React, { Component } from 'react-native';
-import { createStore, combineReducers } from 'redux';
+import { createStore } from 'redux';
 import { Provider } from 'react-redux/native';
 
-import routerReducer from './shared/router/routerReducer';
+import configureStore from './configureStore';
 import DealFinder from './DealFinder';
 
-const store = createStore(combineReducers( { router: routerReducer }));
+const store = configureStore();
 
 export default class App extends Component {
   render() {
