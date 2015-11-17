@@ -32,4 +32,6 @@ describe('Finder actions', () => {
     store.dispatch(actions.fetchCategoriesIfNeeded())
   })
 
+  
+
 });

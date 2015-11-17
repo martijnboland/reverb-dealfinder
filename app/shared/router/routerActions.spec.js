@@ -2,7 +2,7 @@ import * as actionTypes from './routerConstants';
 import navigateTo from './routerActions';
 import { expect } from 'chai';
 
-describe('routerActions', () => {
+describe('Router Actions', () => {
   it('creates an action to navigate to a given path', () => {
     const path = '/testpath';
     const expectedAction = {

@@ -3,7 +3,7 @@ import { apiBaseAddress } from '../shared/constants';
 
 export const CATEGORIES_REQUEST = 'CATEGORIES_REQUEST';
 export const CATEGORIES_SUCCESS = 'CATEGORIES_SUCCESS';
-export const CATEGORIES_ERROR = 'CATEGOROIES_ERROR';
+export const CATEGORIES_ERROR = 'CATEGORIES_ERROR';
 
 function requestCategories() {
   return {
@@ -53,3 +53,5 @@ export function fetchCategoriesIfNeeded() {
     }
   };
 }
+
+export const RESET_ERROR_MESSAGE = 'RESET_ERROR_MESSAGE';

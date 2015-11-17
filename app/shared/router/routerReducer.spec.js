@@ -3,7 +3,7 @@ import routerReducer from './routerReducer';
 import * as actionTypes from './routerConstants';
 import navigateTo from './routerActions';
 
-describe('routerReducer', () => {
+describe('Router reducer', () => {
   it('returns initial state when nothing happened', () => {
     const initialState = { currentRoute: null };
     expect(routerReducer(undefined, {})).to.eql(initialState);
