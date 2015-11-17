@@ -1,9 +1,9 @@
 import { StyleSheet } from 'react-native';
 
 export var colors = {
-  mainBackground: '#FFFFFF',
-  secundaryBackground: '#EEEEEE',
-  mainAccent: '#B71817'
+  mainBackground: '#eee',
+  secundaryBackground: '#ddd',
+  mainAccent: '#b71817'
 };
 
 export var styles = StyleSheet.create({
@@ -16,7 +16,7 @@ export var styles = StyleSheet.create({
   },
   title: {
     fontSize: 18,
-    color: 'FFFFFF',
+    color: 'fff',
     alignSelf: 'center'    
   },
   formInput: {
@@ -24,15 +24,15 @@ export var styles = StyleSheet.create({
     padding: 10,
     fontSize: 18,
     borderWidth: 1,
-    borderColor: '#555555',
+    borderColor: '#555',
     borderRadius: 2,
-    color: '#555555',
+    color: '#555',
     marginBottom: 10
   },
   button: {
     height: 36,
-    backgroundColor: '#555555',
-    borderColor: '#555555',
+    backgroundColor: '#555',
+    borderColor: '#555',
     borderWidth: 1,
     borderRadius: 2,
     marginBottom: 10,
@@ -40,7 +40,7 @@ export var styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 18,
-    color: '#ffffff',
+    color: '#fff',
     alignSelf: 'center'
   }
 });

@@ -1,7 +1,7 @@
 import mockStore from '../../testsupport/mockStore';
 import nock from 'nock';
 import { apiBaseAddress } from '../shared/constants';
-
+import fetch from 'isomorphic-fetch';
 
 import * as actions from './actions'
 
@@ -32,6 +32,6 @@ describe('Finder actions', () => {
     store.dispatch(actions.fetchCategoriesIfNeeded())
   })
 
-  
+
 
 });

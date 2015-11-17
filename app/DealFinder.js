@@ -2,8 +2,8 @@ import React, { View, StyleSheet } from 'react-native';
 import { connect } from 'react-redux/native';
 
 import { Router, RouterRegistry, navigateTo } from './shared/router/Router';
+import { fetchCategoriesIfNeeded } from './find/actions';
 import { colors } from '../styles/global';
-import Finder from './find/Finder';
 
 class App extends React.Component {
   constructor(props) {
@@ -33,7 +33,14 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    this.props.dispatch(navigateTo('/finder'));
+    this.props.dispatch(fetchCategoriesIfNeeded());
+  }
+
+  componentWillReceiveProps(nextProps) {
+    // Check if initial data is ready and navigate to finder
+    if (nextProps.categories && nextProps.categories.items.length > 0) {
+      this.props.dispatch(navigateTo('/finder'));
+    }
   }
 
   render() {
@@ -67,7 +74,8 @@ const styles = StyleSheet.create({
 // Which part of the Redux global state does our component want to receive as props?
 function mapStateToProps(state) {
   return {
-    currentRoute: state.router.currentRoute
+    currentRoute: state.router.currentRoute,
+    categories: state.finder.categories
   };
 }
 

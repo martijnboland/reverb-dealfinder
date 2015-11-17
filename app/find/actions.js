@@ -1,4 +1,3 @@
-import fetch from 'isomorphic-fetch'
 import { apiBaseAddress } from '../shared/constants';
 
 export const CATEGORIES_REQUEST = 'CATEGORIES_REQUEST';

@@ -7,7 +7,7 @@ export default class Finder extends React.Component {
 
   render() {
     return (
-      <View>
+      <View style={styles.container}>
         <SearchInput/>
         <CategoryBrowser/>
       </View>      
@@ -15,3 +15,9 @@ export default class Finder extends React.Component {
   }
 
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  }
+});
