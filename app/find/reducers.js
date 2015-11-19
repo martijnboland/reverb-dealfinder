@@ -34,6 +34,13 @@ function categories(state = categoriesInitialState, action) {
   }
 }
 
+function selectedCategory(state = null, action) {
+  if (action.type === actions.SELECT_CATEGORY) {
+    return action.category
+  }
+  return state
+}
+
 // Updates error message to notify about the failed fetches.
 function errorMessage(state = null, action) {
   const { type, error } = action
@@ -50,6 +57,7 @@ function errorMessage(state = null, action) {
 
 const rootReducer = combineReducers({
   categories,
+  selectedCategory,
   errorMessage
 });
 

@@ -1,23 +1,36 @@
 import { StyleSheet } from 'react-native';
 
-export var colors = {
+export const colors = {
   mainBackground: '#eee',
   secundaryBackground: '#ddd',
-  mainAccent: '#b71817'
+  mainAccent: '#b71817',
+  textNormal: '#444',
+  textLight: '777'
 };
 
-export var styles = StyleSheet.create({
+export const styles = StyleSheet.create({
   header: {
-    alignSelf: 'stretch',
     marginBottom: 10,
     backgroundColor: colors.mainAccent,
     padding: 5,
-    justifyContent: 'center'
+    justifyContent: 'space-between',
+    flexDirection: 'row',    
+    paddingTop: 20
+  },
+  navbarButton: {
+    flex: 1
+  },
+  navbarButtonText: {
+    color: '#fff',
+    fontSize: 16
   },
   title: {
+    alignItems: 'center',
+    flex: 1 
+  },
+  titleText: {
     fontSize: 18,
-    color: 'fff',
-    alignSelf: 'center'    
+    color: 'fff'
   },
   formInput: {
     height: 36,

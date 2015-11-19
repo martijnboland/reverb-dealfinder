@@ -14,6 +14,7 @@ describe('Finder reducers', () => {
         receivedAt: null,
         items: []
       },
+      selectedCategory: null,
       errorMessage: null
     });
   });
@@ -71,6 +72,12 @@ describe('Finder reducers', () => {
     });
     expect(state).to.have.property('errorMessage');
     expect(state.errorMessage).to.equal(errorText);
-  });  
+  });
+
+  it('handle SELECT_CATEGORY', () => {
+    const state = reducers(undefined, { type: actions.SELECT_CATEGORY, category: 'testcategory' });
+    expect(state).to.have.property('selectedCategory');
+    expect(state.selectedCategory).to.equal('testcategory');
+  });
 
 });

@@ -1,9 +1,15 @@
 import { apiBaseAddress } from '../shared/constants';
 
+// Actions
 export const CATEGORIES_REQUEST = 'CATEGORIES_REQUEST';
 export const CATEGORIES_SUCCESS = 'CATEGORIES_SUCCESS';
 export const CATEGORIES_ERROR = 'CATEGORIES_ERROR';
 
+export const SELECT_CATEGORY = 'SELECT_CATEGORY';
+
+export const RESET_ERROR_MESSAGE = 'RESET_ERROR_MESSAGE';
+
+// Action creators
 function requestCategories() {
   return {
     type: CATEGORIES_REQUEST
@@ -13,7 +19,9 @@ function requestCategories() {
 function receiveCategories(json) {
   return {
     type: CATEGORIES_SUCCESS,
-    categories: json.categories,
+    categories: json.categories.map((cat) => { 
+      return { id: cat.id, name: cat.name, slug: cat.slug, description: cat.description, image: cat._links.image.href } 
+    }),
     receivedAt: Date.now()
   };
 }
@@ -53,4 +61,9 @@ export function fetchCategoriesIfNeeded() {
   };
 }
 
-export const RESET_ERROR_MESSAGE = 'RESET_ERROR_MESSAGE';
+export function selectCategory(category) {
+  return {
+    type: SELECT_CATEGORY,
+    category: category
+  }
+}

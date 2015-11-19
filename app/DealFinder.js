@@ -17,7 +17,7 @@ class App extends React.Component {
 
     registry.registerRoutes([
       { path: '/finder', title: 'Find deals', component: () => require('./find/Finder') },
-      { path: '/list', title: 'Products', component: () => require('./list/Products') }
+      { path: '/deals', title: 'Products', component: () => require('./deals/Products') }
     ]);
 
     return registry;
@@ -38,7 +38,7 @@ class App extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     // Check if initial data is ready and navigate to finder
-    if (nextProps.categories && nextProps.categories.items.length > 0) {
+    if (this.props.categories.items.length === 0 && nextProps.categories && nextProps.categories.items.length > 0) {
       this.props.dispatch(navigateTo('/finder'));
     }
   }
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#B71817',
-    paddingTop: 20
+    paddingTop: 0
   },
   navigator: {
     flex: 1,

@@ -1,4 +1,5 @@
 import React, { View, TextInput, StyleSheet, Image } from 'react-native';
+import { colors } from '../../styles/global';
 
 export default class SearchInput extends React.Component {
 
@@ -24,16 +25,16 @@ const styles = StyleSheet.create({
     padding: 10,
     margin: 40,
     backgroundColor: '#fff',
-    borderRadius: 5
+    borderRadius: 2
   },
   searchTextInput: {
     height: 36,
     padding: 10,
     fontSize: 18,
-    borderWidth: 1,
+    borderWidth: 0.5,
     borderColor: '#ccc',
-    borderRadius: 5,
-    color: '#555555',
+    borderRadius: 2,
+    color: colors.textNormal,
     backgroundColor: '#eee',
   }
 });
