@@ -33,7 +33,7 @@ export default class CategoryBrowser extends React.Component {
 
   render() {
     return (
-      <View>
+      <View style={styles.container}>
         <Text style={styles.title}>Browse deals by category</Text>
         <ListView
           dataSource={this.state.dataSource}
@@ -47,6 +47,9 @@ export default class CategoryBrowser extends React.Component {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
   title: {
     color: colors.textLight,
     fontSize: 16,
@@ -57,7 +60,7 @@ const styles = StyleSheet.create({
   list: {
     justifyContent: 'center',
     flexDirection: 'row',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
   },
   row: {
     flex: 1,
