@@ -1,4 +1,5 @@
 import { apiBaseAddress } from '../shared/constants';
+import navigateTo from '../shared/router/routerActions';
 
 // Actions
 export const CATEGORIES_REQUEST = 'CATEGORIES_REQUEST';
@@ -6,6 +7,7 @@ export const CATEGORIES_SUCCESS = 'CATEGORIES_SUCCESS';
 export const CATEGORIES_ERROR = 'CATEGORIES_ERROR';
 
 export const SELECT_CATEGORY = 'SELECT_CATEGORY';
+export const RESET_CATEGORY = 'RESET_CATEGORY';
 
 export const RESET_ERROR_MESSAGE = 'RESET_ERROR_MESSAGE';
 
@@ -61,9 +63,25 @@ export function fetchCategoriesIfNeeded() {
   };
 }
 
-export function selectCategory(category) {
+function selectCategory(category) {
   return {
     type: SELECT_CATEGORY,
     category: category
+  }
+}
+
+export function findDealsForCategory(category) {
+  return (dispatch, getState) => {
+    return dispatch(dispatch => {
+      // TODO async deal finder
+      dispatch(selectCategory(category));
+      dispatch(navigateTo('/deals'))
+    });
+  }
+}
+
+export function resetCategory() {
+  return {
+    type: RESET_CATEGORY
   }
 }

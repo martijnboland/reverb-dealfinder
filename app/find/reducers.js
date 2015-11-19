@@ -35,10 +35,14 @@ function categories(state = categoriesInitialState, action) {
 }
 
 function selectedCategory(state = null, action) {
-  if (action.type === actions.SELECT_CATEGORY) {
-    return action.category
+  switch (action.type) {
+    case actions.SELECT_CATEGORY:
+      return action.category;
+    case action.RESET_CATEGORY:
+      return null;
+    default:
+      return state;
   }
-  return state
 }
 
 // Updates error message to notify about the failed fetches.

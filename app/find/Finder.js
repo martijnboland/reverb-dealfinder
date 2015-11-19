@@ -3,15 +3,14 @@ import { connect } from 'react-redux/native';
 
 import SearchInput from './SearchInput';
 import CategoryBrowser from './CategoryBrowser';
-import navigateTo from '../shared/router/routerActions';
-import { selectCategory } from './actions';
+import { findDealsForCategory, resetCategory } from './actions';
 
 class Finder extends React.Component {
 
   componentWillReceiveProps(nextProps) {
-    // Navigate 
-    if (nextProps.selectedCategory && nextProps.selectedCategory !== this.props.selectedCategory) {
-      this.props.dispatch(navigateTo('/deals'));
+    // Reset category 
+    if (nextProps.selectedCategory) {
+      this.props.dispatch(resetCategory());
     }
   }
 
@@ -22,7 +21,7 @@ class Finder extends React.Component {
           <SearchInput />
         </View>
         <View style={styles.categorybrowser}>
-          <CategoryBrowser categories={this.props.categories} onSelectCategory={(category) => this.props.dispatch(selectCategory(category))} />
+          <CategoryBrowser categories={this.props.categories} onSelectCategory={(category) => this.props.dispatch(findDealsForCategory(category))} />
         </View>
       </View>      
     );
