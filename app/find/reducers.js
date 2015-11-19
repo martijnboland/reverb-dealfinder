@@ -4,7 +4,6 @@ import * as actions from './actions';
 const categoriesInitialState = {
   isFetching: false,
   didInvalidate: false,
-  receivedAt: null,
   items: []
 };
 
@@ -20,8 +19,7 @@ function categories(state = categoriesInitialState, action) {
       return {
         isFetching: false,
         didInvalidate: false,
-        receivedAt: action.receivedAt,
-        items: action.categories
+        items: action.data
       }
     case actions.CATEGORIES_ERROR:
       return {

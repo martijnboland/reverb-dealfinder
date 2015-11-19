@@ -2,7 +2,9 @@ import { applyMiddleware } from 'redux'
 import thunk from 'redux-thunk'
 import { expect } from 'chai';
 
-const middlewares = [ thunk ]
+import apiMiddleware from '../app/shared/middleware/api';
+
+const middlewares = [ thunk, apiMiddleware ]
 
 /**
  * Creates a mock of Redux store with middleware.

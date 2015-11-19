@@ -11,7 +11,6 @@ describe('Finder reducers', () => {
       categories: {
         isFetching: false,
         didInvalidate: false,
-        receivedAt: null,
         items: []
       },
       selectedCategory: null,
@@ -25,28 +24,23 @@ describe('Finder reducers', () => {
     expect(state.categories).to.eql({
       isFetching: true,
       didInvalidate: false,
-      receivedAt: null,
       items: []
     });
   });
 
   it('handle CATEGORIES_SUCCESS', () => {
-    const initialDate = Date.now() - 1;
     const initialState = {
       categories: {
         isFetching: true,
         didInvalidate: false,
-        receivedAt: initialDate,
         items: []
       }
     };
-    const nowDate = Date.now();
-    const state = reducers(initialState, { type: actions.CATEGORIES_SUCCESS, categories: [ { name: 'Category 1' } ], receivedAt: nowDate });
+    const state = reducers(initialState, { type: actions.CATEGORIES_SUCCESS, categories: [ { name: 'Category 1' } ] });
     expect(state).to.have.property('categories');
     expect(state.categories).to.eql({
       isFetching: false,
       didInvalidate: false,
-      receivedAt: nowDate,
       items: [ { name: 'Category 1' } ]
     });
   });
@@ -57,7 +51,6 @@ describe('Finder reducers', () => {
       categories: {
         isFetching: false,
         didInvalidate: false,
-        receivedAt: null,
         items: []
       }
     };
@@ -67,7 +60,6 @@ describe('Finder reducers', () => {
     expect(state.categories).to.eql({
       isFetching: false,
       didInvalidate: false,
-      receivedAt: null,
       items: []
     });
     expect(state).to.have.property('errorMessage');

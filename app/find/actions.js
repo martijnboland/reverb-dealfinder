@@ -9,57 +9,24 @@ export const CATEGORIES_ERROR = 'CATEGORIES_ERROR';
 export const SELECT_CATEGORY = 'SELECT_CATEGORY';
 export const RESET_CATEGORY = 'RESET_CATEGORY';
 
+export const DEALS_BY_CATEGORY_REQUEST = 'DEALS_BY_CATEGORY_REQUEST';
+export const DEALS_BY_CATEGORY_SUCCESS = 'DEALS_BY_CATEGORY_SUCCESS';
+export const DEALS_BY_CATEGORY_ERROR = 'DEALS_BY_CATEGORY_ERROR';
+
 export const RESET_ERROR_MESSAGE = 'RESET_ERROR_MESSAGE';
 
 // Action creators
-function requestCategories() {
-  return {
-    type: CATEGORIES_REQUEST
-  };
-}
-
-function receiveCategories(json) {
-  return {
-    type: CATEGORIES_SUCCESS,
-    categories: json.categories.map((cat) => { 
-      return { id: cat.id, name: cat.name, slug: cat.slug, description: cat.description, image: cat._links.image.href } 
-    }),
-    receivedAt: Date.now()
-  };
-}
-
-function requestCategoriesError(error) {
-  return {
-    type: CATEGORIES_ERROR,
-    error: error
-  }
-}
-
-function fetchCategories() {
-  return dispatch => {
-    dispatch(requestCategories())
-    return fetch(apiBaseAddress + '/categories')
-      .then(req => req.json())
-      .then(json => dispatch(receiveCategories(json)))
-      .catch(err => dispatch(requestCategoriesError(err)));
-  };
-}
-
-function shouldFetchCategories(state) {
-  if (!state.categories) {
-    return true;
-  } else if (state.categories.isFetching) {
-    return false;
-  } else {
-    return state.categories.didInvalidate;
-  }
-}
-
 export function fetchCategoriesIfNeeded() {
-  return (dispatch, getState) => {
-    if (shouldFetchCategories(getState())) {
-      return dispatch(fetchCategories());
-    }
+  return {
+    types: [CATEGORIES_REQUEST, CATEGORIES_SUCCESS, CATEGORIES_ERROR],
+    shouldCallApi: (state) => !state.categories || (!state.categories.isFetching && state.categories.didInvalidate),
+    callApi: () => fetch(apiBaseAddress + '/categories'),
+    transformResult: (json) => { 
+      return json.categories.map((cat) => { 
+        return { id: cat.id, name: cat.name, slug: cat.slug, description: cat.description, image: cat._links.image.href } 
+      })
+    },
+    payload: {}
   };
 }
 
