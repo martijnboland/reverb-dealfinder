@@ -36,7 +36,7 @@ describe('Finder reducers', () => {
         items: []
       }
     };
-    const state = reducers(initialState, { type: actions.CATEGORIES_SUCCESS, categories: [ { name: 'Category 1' } ] });
+    const state = reducers(initialState, { type: actions.CATEGORIES_SUCCESS, data: [ { name: 'Category 1' } ] });
     expect(state).to.have.property('categories');
     expect(state.categories).to.eql({
       isFetching: false,
