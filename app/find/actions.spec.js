@@ -27,7 +27,11 @@ describe('Finder actions', () => {
         { id: 2, slug: 'cat-2', name: 'Category 2', description: '', image: '' } 
       ] }
     ];
-    const store = mockStore({ categories: null }, expectedActions, done)
+    const store = mockStore({ 
+      finder: { 
+        categories: null 
+      } 
+    }, expectedActions, done)
     store.dispatch(actions.fetchCategoriesIfNeeded())
   })
 

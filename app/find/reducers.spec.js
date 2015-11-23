@@ -14,6 +14,16 @@ describe('Finder reducers', () => {
         items: []
       },
       selectedCategory: null,
+      priceGuides: {
+        bySearchTerm: {
+          isFetching: false,
+          didInvalidate: false,
+          items: []
+        },
+        byCategory: {}
+      },
+      dealsListings: {},
+      deals: [],
       errorMessage: null
     });
   });
@@ -70,6 +80,162 @@ describe('Finder reducers', () => {
     const state = reducers(undefined, { type: actions.SELECT_CATEGORY, category: 'testcategory' });
     expect(state).to.have.property('selectedCategory');
     expect(state.selectedCategory).to.equal('testcategory');
+  });
+
+  it('handle PRICEGUIDES_BY_CATEGORY_REQUEST', () => {
+    const state = reducers(undefined, { type: actions.PRICEGUIDES_BY_CATEGORY_REQUEST, category: 'test' });
+    expect(state).to.have.property('priceGuides');
+    expect(state.priceGuides.byCategory).to.have.property('test');
+    expect(state.priceGuides.byCategory.test).to.eql({
+      isFetching: true,
+      didInvalidate: false,
+      items: []
+    });
+  });
+
+  it('handle PRICEGUIDES_BY_CATEGORY_SUCCESS', () => {
+    const initialState = {
+      priceGuides: {
+        bySearchTerm: {
+          isFetching: false,
+          didInvalidate: false,
+          items: []
+        },
+        byCategory: {
+          test: {
+            isFetching: true,
+            didInvalidate: false,
+            items: []
+          }
+        }
+      }
+    };
+    const state = reducers(initialState, { type: actions.PRICEGUIDES_BY_CATEGORY_SUCCESS, category: 'test', data: [ { title: 'Test price guide' } ] });
+    expect(state).to.have.property('priceGuides');
+    expect(state.priceGuides.byCategory).to.have.property('test');
+    expect(state.priceGuides.byCategory.test).to.eql({
+      isFetching: false,
+      didInvalidate: false,
+      items: [ { title: 'Test price guide'} ]
+    });
+
+  });
+
+  it('handle PRICEGUIDES_BYCATEGORY_ERROR', () => {
+    const errorText = 'Oops, something went wrong';
+    const initialState = {
+      priceGuides: {
+        bySearchTerm: {
+          isFetching: false,
+          didInvalidate: false,
+          items: []
+        },
+        byCategory: {
+          test: {
+            isFetching: true,
+            didInvalidate: false,
+            items: []
+          }
+        }
+      }
+    };
+    const state = reducers(initialState, { type: actions.PRICEGUIDES_BY_CATEGORY_ERROR, category: 'test', error: errorText })
+    expect(state).to.not.equal(initialState);
+    expect(state).to.have.property('priceGuides');
+    expect(state.priceGuides.byCategory).to.have.property('test');
+    expect(state.priceGuides.byCategory.test).to.eql({
+      isFetching: false,
+      didInvalidate: false,
+      items: []
+    });    
+    expect(state).to.have.property('errorMessage');
+    expect(state.errorMessage).to.equal(errorText);
+  });
+
+  it('handle DEALS_LISTINGS_REQUEST', () => {
+    const state = reducers(undefined, { type: actions.DEALS_LISTINGS_REQUEST, priceGuide: '/api/priceguide/879487'  });
+    expect(state).to.have.property('dealsListings');
+    expect(state.dealsListings).to.have.property('/api/priceguide/879487');
+    expect(state.dealsListings['/api/priceguide/879487']).to.eql({
+      isFetching: true,
+      didInvalidate: false,
+      items: []
+    });
+  });
+
+  it('handle DEALS_LISTINGS_SUCCESS', () => {
+    const initialState = {
+      dealsListings: {
+        '/api/priceguide/879487': {
+          isFetching: true,
+          didInvalidate: false,
+          items: []
+        }
+      }
+    };
+    const state = reducers(initialState, { type: actions.DEALS_LISTINGS_SUCCESS, priceGuide: '/api/priceguide/879487', data: [ { title: 'Test deal' } ] });
+    expect(state).to.have.property('dealsListings');
+    expect(state.dealsListings).to.have.property('/api/priceguide/879487');
+    expect(state.dealsListings['/api/priceguide/879487']).to.eql({
+      isFetching: false,
+      didInvalidate: false,
+      items: [ { title: 'Test deal'} ]
+    });
+  });
+
+  it('handle DEALS_LISTINGS_ERROR', () => {
+    const errorText = 'Oops, something went wrong';
+    const initialState = {
+      dealsListings: {
+        '/api/priceguide/879487': {
+          isFetching: true,
+          didInvalidate: false,
+          items: []
+        }
+      }
+    };
+    const state = reducers(initialState, { type: actions.DEALS_LISTINGS_ERROR, priceGuide: '/api/priceguide/879487', error: errorText });
+    expect(state).to.not.equal(initialState);
+    expect(state).to.have.property('dealsListings');
+    expect(state.dealsListings).to.have.property('/api/priceguide/879487');
+    expect(state.dealsListings['/api/priceguide/879487']).to.eql({
+      isFetching: false,
+      didInvalidate: false,
+      items: []
+    });    
+    expect(state).to.have.property('errorMessage');
+    expect(state.errorMessage).to.equal(errorText);
+  });
+
+  it('clear deals list when finding deals for a category starts', () => {
+    const initialState = {
+      deals: [
+        {
+          title: 'Deal of the month'
+        }
+      ]
+    }
+    const state = reducers(initialState, { type: actions.DEALS_BY_CATEGORY_START });
+    expect(state.deals).to.be.empty;
+  });
+
+  it('appends deals list when listings for a certain price guide are found', () => {
+    const initialState = {
+      deals: [
+        {
+          title: 'Deal of the month'
+        }
+      ]
+    }
+    const state = reducers(initialState, { 
+      type: actions.DEALS_LISTINGS_SUCCESS, 
+      payload: { priceGuide: '/api/priceguide/879487' }, 
+      data: [ 
+        { title: 'Another deal 1' },
+        { title: 'Another deal 2' },
+      ] 
+    });
+    expect(state.deals).to.have.length(3);
   });
 
 });
