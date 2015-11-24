@@ -137,23 +137,6 @@ function dealsListings(state = {}, action) {
   }
 }
 
-function deals(state = [], action) {
-  switch(action.type) {
-    case actions.DEALS_BY_CATEGORY_START:
-      return [];
-    case actions.DEALS_LISTINGS_SUCCESS:
-      if (action.data) {
-        var nextState = [];
-        nextState.push(...state);
-        nextState.push(...action.data)
-        return nextState;        
-      }
-      return state;
-    default:
-      return state;
-  }
-}
-
 // Updates error message to notify about the failed fetches.
 function errorMessage(state = null, action) {
   const { type, error } = action
@@ -172,7 +155,6 @@ const rootReducer = combineReducers({
   selectedCategory,
   priceGuides,
   dealsListings,
-  deals,
   errorMessage
 });
 

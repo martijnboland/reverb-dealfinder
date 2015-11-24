@@ -77,8 +77,8 @@ function getDealsForPriceGuide(priceGuide) {
   if (isNaN(year)) {
     decade = year;
   } else {
-    yearFrom = parseInt(year) - 5;
-    yearTo = parseInt(year) + 5;
+    yearFrom = (parseInt(year) - 5).toString();
+    yearTo = (parseInt(year) + 5).toString();
   }
 
   // Check if estimated_value exists at all
@@ -130,8 +130,9 @@ export function findDealsForCategory(category) {
       dispatch(dealsByCategoryStart())
       dispatch(getPriceGuidesByCategory(category))
         .then(priceGuidesResult => {
+          let fetches = [];
           priceGuidesResult.data.price_guides.forEach(priceGuide => {
-            dispatch(getDealsForPriceGuide(priceGuide));
+            fetches.push(dispatch(getDealsForPriceGuide(priceGuide)));
           });
           dispatch(navigateTo('/deals'));
         })

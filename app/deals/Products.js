@@ -71,10 +71,36 @@ const styles = StyleSheet.create({
   }
 });
 
-function mapStateToProps(state) {
+function selectDeals(finderState) {
+  let deals = [];
+  let priceGuides = [];
+  
+  if (finderState.searchTerm) {
+    priceGuides = finderState.priceGuides.bySearchTerm.items.price_guides.map(pg => {
+      return pg._links.self.href;
+    });
+  } 
+  else if (finderState.selectedCategory) {
+    if (finderState.priceGuides.byCategory[finderState.selectedCategory]) {
+      priceGuides = finderState.priceGuides.byCategory[finderState.selectedCategory].items.price_guides.map(pg => {
+        return pg._links.self.href;
+      });    
+    }
+  }
+  
+  priceGuides.forEach(pg => {
+    const dealslistings = finderState.dealsListings[pg];
+    if (dealslistings) {
+      deals.push(...dealslistings.items);    
+    } 
+  });
+  return deals;
+}
+
+function select(state) {
   return {
-    deals: state.finder.deals
+    deals: selectDeals(state.finder)
   };
 }
 
-export default connect(mapStateToProps)(Products)
+export default connect(select)(Products)

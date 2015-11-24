@@ -23,7 +23,6 @@ describe('Finder reducers', () => {
         byCategory: {}
       },
       dealsListings: {},
-      deals: [],
       errorMessage: null
     });
   });
@@ -205,37 +204,6 @@ describe('Finder reducers', () => {
     });    
     expect(state).to.have.property('errorMessage');
     expect(state.errorMessage).to.equal(errorText);
-  });
-
-  it('clear deals list when finding deals for a category starts', () => {
-    const initialState = {
-      deals: [
-        {
-          title: 'Deal of the month'
-        }
-      ]
-    }
-    const state = reducers(initialState, { type: actions.DEALS_BY_CATEGORY_START });
-    expect(state.deals).to.be.empty;
-  });
-
-  it('appends deals list when listings for a certain price guide are found', () => {
-    const initialState = {
-      deals: [
-        {
-          title: 'Deal of the month'
-        }
-      ]
-    }
-    const state = reducers(initialState, { 
-      type: actions.DEALS_LISTINGS_SUCCESS, 
-      payload: { priceGuide: '/api/priceguide/879487' }, 
-      data: [ 
-        { title: 'Another deal 1' },
-        { title: 'Another deal 2' },
-      ] 
-    });
-    expect(state.deals).to.have.length(3);
   });
 
 });
