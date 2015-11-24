@@ -28,7 +28,10 @@ export const RESET_ERROR_MESSAGE = 'RESET_ERROR_MESSAGE';
 export function fetchCategoriesIfNeeded() {
   return {
     types: [CATEGORIES_REQUEST, CATEGORIES_SUCCESS, CATEGORIES_ERROR],
-    shouldCallApi: state => !state.finder.categories || state.finder.categories.items.length === 0 || (!state.finder.categories.isFetching && state.finder.categories.didInvalidate),
+    shouldCallApi: state => 
+      !state.finder.categories || 
+      state.finder.categories.items.length === 0 || 
+      (!state.finder.categories.isFetching && state.finder.categories.didInvalidate),
     callApi: () => fetch(apiBaseAddress + '/categories'),
     transformResult: json => { 
       return json.categories.map(cat => { 
@@ -62,7 +65,10 @@ function dealsByCategoryError(error) {
 function getPriceGuidesByCategory(category) {
   return {
     types: [PRICEGUIDES_BY_CATEGORY_REQUEST, PRICEGUIDES_BY_CATEGORY_SUCCESS, PRICEGUIDES_BY_CATEGORY_ERROR],
-    shouldCallApi: state => !state.finder.priceGuides || !state.finder.priceGuides[category] || (!state.finder.priceGuides[category].isFetching && state.finder.priceGuides[category].didInvalidate),
+    shouldCallApi: state => 
+      !state.finder.priceGuides || 
+      !state.finder.priceGuides[category] || 
+      (!state.finder.priceGuides[category].isFetching && state.finder.priceGuides[category].didInvalidate),
     callApi: () => fetch(apiBaseAddress + '/priceguide' + encodeURI(`?product_type=${category}`)),
     payload: {
       category: category
