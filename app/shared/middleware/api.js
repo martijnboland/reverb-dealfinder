@@ -1,4 +1,4 @@
-export default apiMiddleware = store => next => action => {
+export default store => next => action => {
   const {
     types,
     callApi,

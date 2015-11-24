@@ -18,6 +18,7 @@ export const DEALS_LISTINGS_SUCCESS = 'DEALS_LISTINGS_SUCCESS';
 export const DEALS_LISTINGS_ERROR = 'DEALS_LISTINGS_ERROR';
 
 export const DEALS_BY_CATEGORY_START = 'DEALS_BY_CATEGORY_START';
+export const DEALS_BY_CATEGORY_ERROR = 'DEALS_BY_CATEGORY_ERROR';
 
 export const DEALS_RESET = 'DEALS_RESET';
 
@@ -48,6 +49,13 @@ function selectCategory(category) {
 function dealsByCategoryStart() {
   return {
     type: DEALS_BY_CATEGORY_START
+  }
+}
+
+function dealsByCategoryError(error) {
+  return {
+    type: DEALS_BY_CATEGORY_ERROR,
+    error: error
   }
 }
 

@@ -1,16 +1,24 @@
 {
+  "parser": "babel-eslint",
   "ecmaFeatures": {
     "blockBindings": true,
     "jsx": true,
     "modules": true,
     "arrowFunctions": true,
-    "classes": true
+    "classes": true,
+    "defaultParams": true,
+    "destructuring": true,
+    "forOf": true,
+    "restParams": true,
+    "spread": true,
+    "templateStrings": true,
+    "experimentalObjectRestSpread": true
   },
 
   "env": {
-    "browser": false,
     "node": true,
-    "mocha": true
+    "mocha": true,
+    "es6": true
   },
 
   "globals": {
