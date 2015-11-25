@@ -5,7 +5,8 @@ export const colors = {
   secundaryBackground: '#ddd',
   mainAccent: '#b71817',
   textNormal: '#444',
-  textLight: '777'
+  textLight: '#777',
+  textAttention: '#b86a00'
 };
 
 export const styles = StyleSheet.create({

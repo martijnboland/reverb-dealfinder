@@ -47,7 +47,8 @@ const priceGuidesInitialState = {
   bySearchTerm: {
     isFetching: false,
     didInvalidate: false,
-    items: []
+    items: [],
+    next: null
   },
   byCategory: {}
 }
@@ -70,7 +71,9 @@ function priceGuides(state = priceGuidesInitialState, action) {
       };
       return nextState;
     case actions.PRICEGUIDES_BY_CATEGORY_SUCCESS:
-      return {
+      const priceGuides = state.byCategory[action.category] ? state.byCategory[action.category].items || [] : [];
+      priceGuides.push(...action.data.price_guides);
+      var nextState = {
         ...state,
         byCategory: {
           ...state.byCategory,
@@ -78,10 +81,12 @@ function priceGuides(state = priceGuidesInitialState, action) {
             ...state.byCategory[action.category],
             isFetching: false, 
             didInvalidate: false,
-            items: action.data
+            items: priceGuides,
+            next: action.data._links && action.data._links.next ? action.data._links.next.href : null
           }
         }
       };
+      return nextState;
     case actions.PRICEGUIDES_BY_CATEGORY_ERROR:
       return {
       ...state,

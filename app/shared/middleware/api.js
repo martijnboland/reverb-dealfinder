@@ -21,7 +21,7 @@ export default store => next => action => {
   }
 
   if (!shouldCallApi(store.getState())) {
-    return;
+    return Promise.resolve();
   }
 
   const [ requestType, successType, failureType ] = types;

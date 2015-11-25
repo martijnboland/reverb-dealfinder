@@ -18,7 +18,8 @@ describe('Finder reducers', () => {
         bySearchTerm: {
           isFetching: false,
           didInvalidate: false,
-          items: []
+          items: [],
+          next: null
         },
         byCategory: {}
       },
@@ -109,13 +110,21 @@ describe('Finder reducers', () => {
         }
       }
     };
-    const state = reducers(initialState, { type: actions.PRICEGUIDES_BY_CATEGORY_SUCCESS, category: 'test', data: [ { title: 'Test price guide' } ] });
+    const state = reducers(initialState, { 
+      type: actions.PRICEGUIDES_BY_CATEGORY_SUCCESS, 
+      category: 'test', 
+      data: { 
+        total: 1,
+        price_guides: [{ title: 'Test price guide' }] 
+      }
+    });
     expect(state).to.have.property('priceGuides');
     expect(state.priceGuides.byCategory).to.have.property('test');
     expect(state.priceGuides.byCategory.test).to.eql({
       isFetching: false,
       didInvalidate: false,
-      items: [ { title: 'Test price guide'} ]
+      items: [ { title: 'Test price guide'} ],
+      next: null
     });
 
   });
