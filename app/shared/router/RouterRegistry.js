@@ -14,9 +14,9 @@ export default class RouterRegistry {
     }
 
     registerRoutes(routes) {
-        for(let route of routes){
-          this.registerRoute(route);
-        }
+        routes.forEach(route => {
+           this.registerRoute(route); 
+        });
     }
 
     unregisterRouteByPath(path) {

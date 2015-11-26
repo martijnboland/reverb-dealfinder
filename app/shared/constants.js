@@ -1,1 +1,2 @@
-export const apiBaseAddress = 'https://reverb.com/api';
+export const apiHost = 'https://reverb.com'
+export const apiBaseAddress = apiHost + '/api';

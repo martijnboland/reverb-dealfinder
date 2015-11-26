@@ -1,4 +1,6 @@
-import { apiBaseAddress } from '../shared/constants';
+import queryString from 'query-string';
+
+import { apiHost, apiBaseAddress } from '../shared/constants';
 import navigateTo from '../shared/router/routerActions';
 
 // Actions
@@ -129,7 +131,7 @@ function getDealsForPriceGuide(priceGuide) {
   };
 }
 
-function canFetchMorePriceGuides(state) {
+function canGetMorePriceGuides(state) {
   const { searchTerm, selectedCategory, priceGuides } = state.finder;
   if (searchTerm) {
     return priceGuides.bySeachTerm.next !== null && ! priceGuides.bySearchTerm.isFetching;
@@ -139,6 +141,32 @@ function canFetchMorePriceGuides(state) {
       ! priceGuides.byCategory[selectedCategory].isFetching;
   }
   return false;
+}
+
+function getMorePriceGuides(state) {
+  const { searchTerm, selectedCategory, priceGuides } = state.finder;
+
+  if (searchTerm) {
+    // TODO
+    return;
+  }
+  if (selectedCategory) {
+    const priceGuidesForCategory = priceGuides.byCategory[selectedCategory];
+    const nextLinkParams = queryString.parse(queryString.extract(priceGuidesForCategory.next));
+    const maxItemsAfterNextFetch = parseInt(nextLinkParams.page) * parseInt(nextLinkParams.per_page);
+    const nextLink = apiHost + priceGuidesForCategory.next;
+    
+    return {
+      types: [PRICEGUIDES_BY_CATEGORY_REQUEST, PRICEGUIDES_BY_CATEGORY_SUCCESS, PRICEGUIDES_BY_CATEGORY_ERROR],
+      shouldCallApi: state => ! priceGuidesForCategory.isFetching && 
+        priceGuidesForCategory.items.length < maxItemsAfterNextFetch &&
+        priceGuidesForCategory.items.length < 75, // Be a little gentle on the Reverb API
+      callApi: () => fetch(nextLink),
+      payload: {
+        category: selectedCategory
+      }
+    };    
+  } 
 }
 
 export function fetchCategoriesIfNeeded() {
@@ -182,11 +210,21 @@ export function findDealsForCategory(category) {
 export function findMoreDeals() {
   console.log('Moar deals!');
   return (dispatch, getState) => {
-    if (canFetchMorePriceGuides(getState())) {
-      console.log('  Can fetch');
-      
+    if (canGetMorePriceGuides(getState())) {
+      return dispatch(dispatch => {
+        dispatch(getMorePriceGuides(getState()))
+          .then(priceGuidesResult => {
+            if (priceGuidesResult) {
+              priceGuidesResult.data.price_guides.forEach(priceGuide => {
+                dispatch(getDealsForPriceGuide(priceGuide));
+              });            
+            }
+          })
+          .catch(error => {
+            dispatch(dealsByCategoryError(error));
+          });
+      });
     } else {
-      console.log('  No way!');
       return Promise.resolve();
     }
   }

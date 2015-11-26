@@ -4,6 +4,7 @@ import { connect } from 'react-redux/native';
 import navigateTo from '../shared/router/routerActions';
 import dealsSelector from './dealsSelector';
 import { findMoreDeals } from '../find/actions';
+import Spinner from '../shared/components/Spinner';
 import { colors, styles as globalStyles } from '../../styles/global';
 
 export default class Products extends React.Component {
@@ -13,17 +14,34 @@ export default class Products extends React.Component {
 
     this._ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
-      dataSource: this._ds.cloneWithRows(props.deals)
+      dataSource: this._ds.cloneWithRows(props.deals),
+      isLoading: props.isLoading,
+      listView: null
     }
 
     this._renderRow = this._renderRow.bind(this);
     this._onGoBack = this._onGoBack.bind(this);
-    this._onEndReached = this._onEndReached.bind(this);
+    this._getMoreDeals = this._getMoreDeals.bind(this);
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.deals) {
       this.state.dataSource = this._ds.cloneWithRows(nextProps.deals);
+    }
+    const wasLoading = this.state.isLoading;
+    this.state.isLoading = nextProps.isLoading;
+    
+    if (wasLoading && ! nextProps.isLoading) {
+      // Get more deals when the listview is not filling the screen
+      if (this._listView.scrollProperties.contentLength < this._listView.props.scrollRenderAheadDistance) {
+        this._getMoreDeals();      
+      }
+    }
+  }
+  
+  _getMoreDeals() {
+    if (! this.state.isLoading && this.props.canLoadMoreDeals) {
+      this.props.dispatch(findMoreDeals());    
     }
   }
 
@@ -46,12 +64,17 @@ export default class Products extends React.Component {
     );
   }
   
-  _onEndReached() {
-    this.props.dispatch(findMoreDeals());
-  }
-
   _onGoBack() {
     this.props.dispatch(navigateTo('/finder'));
+  }
+  
+  _renderLoadingIndicator() {
+    if (this.props.isLoading) {
+      return (
+        <Spinner color={'#fff'} />
+      )      
+    }
+    return null;
   }
 
   render() {
@@ -64,14 +87,17 @@ export default class Products extends React.Component {
           <View style={globalStyles.title}>
             <Text style={globalStyles.titleText}>Deals</Text>
           </View>
-          <Text style={globalStyles.navbarButton}></Text>
+          <View style={globalStyles.navbarButton}>
+            {this._renderLoadingIndicator()}
+          </View>
         </View>
         <Text style={styles.title}>{this.props.title}</Text>
         <ListView
           dataSource={this.state.dataSource}
           renderRow={this._renderRow}
           contentContainerStyle={styles.list}
-          onEndReached={this._onEndReached}
+          onEndReached={this._getMoreDeals}
+          ref={(c) => this._listView = c}
         />
       </View>      
     );

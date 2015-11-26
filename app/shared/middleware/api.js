@@ -30,7 +30,12 @@ export default store => next => action => {
 
   return callApi()
     .then(response => { 
-      return response.json()
+      if (response.status >= 200 && response.status < 300) {
+        return response.json()      
+      } 
+      if (response.status >= 400) {
+        throw new Error(response.text());
+      }
     })
     .then(json => store.dispatch({ ...payload, data: transformResult(json), type: successType }))
     .catch(error => store.dispatch({ ...payload, error: error, type: failureType }));

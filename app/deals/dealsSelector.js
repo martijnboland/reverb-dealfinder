@@ -1,24 +1,10 @@
 import { createSelector } from 'reselect';
 
-function selectDeals(searchTerm, selectedCategory, allPriceGuides, allDealsListings) {
+function selectDeals(currentPriceGuides, allDealsListings) {
   let deals = [];
-  let priceGuides = [];
   
-  if (searchTerm) {
-    priceGuides = allPriceGuides.bySearchTerm.items.map(pg => {
-      return pg._links.self.href;
-    });
-  } 
-  else if (selectedCategory) {
-    if (allPriceGuides.byCategory[selectedCategory]) {
-      priceGuides = allPriceGuides.byCategory[selectedCategory].items.map(pg => {
-        return pg._links.self.href;
-      });    
-    }
-  }
-  
-  priceGuides.forEach(pg => {
-    const dealslistings = allDealsListings[pg];
+  currentPriceGuides.items.forEach(pg => {
+    const dealslistings = allDealsListings[pg._links.self.href];
     if (dealslistings) {
       deals.push(...dealslistings.items);    
     } 
@@ -38,6 +24,21 @@ function createTitle(searchTerm, selectedCategory, categories) {
   }
 }
 
+function canLoadMoreDeals(currentPriceGuides) {
+  return currentPriceGuides.next !== null;
+}
+
+function isLoading(currentPriceGuides, allDealsListings) {
+  if (currentPriceGuides.isFetching) {
+    return true;
+  } else {
+    return currentPriceGuides.items.some(pg => {
+      const dealsListings = allDealsListings[pg._links.self.href];
+      return dealsListings && dealsListings.isFetching
+    });
+  }
+}
+
 const searchTermSelector = (state) => state.finder.searchTerm;
 const selectedCategorySelector = (state) => state.finder.selectedCategory;
 const priceGuidesSelector = (state) => state.finder.priceGuides;
@@ -45,10 +46,21 @@ const dealsListingsSelector = (state) => state.finder.dealsListings;
 const categoriesSelector = (state) => state.finder.categories;
 export default createSelector(
   [ searchTermSelector, selectedCategorySelector, priceGuidesSelector, dealsListingsSelector, categoriesSelector ],
-  (searchTerm, selectedCategory, priceGuides, dealsListings, categories) => {
+  (searchTerm, selectedCategory, allPriceGuides, dealsListings, categories) => {
+    let currentPriceGuides = [];
+    
+    if (searchTerm) {
+      currentPriceGuides = allPriceGuides.bySearchTerm;
+    } 
+    else if (selectedCategory) {
+      currentPriceGuides = allPriceGuides.byCategory[selectedCategory];
+    }
+    
     return {
-      deals: selectDeals(searchTerm, selectedCategory, priceGuides, dealsListings),
-      title: createTitle(searchTerm, selectedCategory, categories)
+      deals: selectDeals(currentPriceGuides, dealsListings),
+      title: createTitle(searchTerm, selectedCategory, categories),
+      canLoadMoreDeals: canLoadMoreDeals(currentPriceGuides),
+      isLoading: isLoading(currentPriceGuides, dealsListings)
     }
   }
 )
