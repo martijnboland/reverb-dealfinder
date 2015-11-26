@@ -87,7 +87,7 @@ export default class Products extends React.Component {
           <View style={globalStyles.title}>
             <Text style={globalStyles.titleText}>Deals</Text>
           </View>
-          <View style={globalStyles.navbarButton}>
+          <View style={[globalStyles.navbarButton, globalStyles.headerRight]}>
             {this._renderLoadingIndicator()}
           </View>
         </View>

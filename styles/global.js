@@ -18,6 +18,9 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',    
     paddingTop: 20
   },
+  headerRight: {
+    alignItems: 'flex-end'
+  },
   navbarButton: {
     flex: 1
   },
