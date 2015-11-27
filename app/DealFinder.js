@@ -1,4 +1,4 @@
-import React, { View, StyleSheet } from 'react-native';
+import React, { View, StyleSheet, Navigator } from 'react-native';
 import { connect } from 'react-redux/native';
 
 import { Router, RouterRegistry, navigateTo } from './shared/router/Router';
@@ -17,7 +17,8 @@ class App extends React.Component {
 
     registry.registerRoutes([
       { path: '/finder', title: 'Find deals', component: () => require('./find/Finder') },
-      { path: '/deals', title: 'Products', component: () => require('./deals/Products') }
+      { path: '/deals', title: 'Products', component: () => require('./deals/Products') },
+      { path: '/listing', title: 'Listing', component: () => require('./deals/Listing'), sceneConfig: Navigator.SceneConfigs.FloatFromBottom }
     ]);
 
     return registry;
@@ -69,7 +70,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.mainBackground
   }
 });
-
 
 // Which part of the Redux global state does our component want to receive as props?
 function mapStateToProps(state) {

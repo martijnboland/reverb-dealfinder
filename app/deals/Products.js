@@ -4,6 +4,7 @@ import { connect } from 'react-redux/native';
 import navigateTo from '../shared/router/routerActions';
 import dealsSelector from './dealsSelector';
 import { findMoreDeals, resetSearchTerm, resetCategory } from '../find/actions';
+import { gotoListing } from './actions';
 import Spinner from '../shared/components/Spinner';
 import { colors, styles as globalStyles } from '../../styles/global';
 
@@ -50,10 +51,20 @@ export default class Products extends React.Component {
     }
   }
 
+  _onGoBack() {
+    this.props.dispatch(navigateTo('/finder'));
+  }
+
+  _onGoToListing(link) {
+    this.props.dispatch(gotoListing(link));
+  }
+  
   _renderRow(deal) {
     return (
       <View style={styles.row}>
-        <Image source={{uri: deal.thumbnail}} style={styles.thumbnail} />
+        <TouchableOpacity onPress={() => this._onGoToListing(deal.link)} underlayColor="transparent">
+          <Image source={{uri: deal.thumbnail}} style={styles.thumbnail} />
+        </TouchableOpacity>
         <View style={styles.dealcontainer}>
           <View style={styles.dealtext}>
             <Text style={styles.dealtitle}>{deal.title}</Text>
@@ -68,11 +79,7 @@ export default class Products extends React.Component {
       </View>
     );
   }
-  
-  _onGoBack() {
-    this.props.dispatch(navigateTo('/finder'));
-  }
-  
+    
   _renderLoadingIndicator() {
     if (this.props.isLoading) {
       return (

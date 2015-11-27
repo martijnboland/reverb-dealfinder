@@ -4,6 +4,7 @@ import createLogger from 'redux-logger';
 import apiMiddleware from './shared/middleware/api';
 import routerReducer from './shared/router/routerReducer';
 import finderReducers from './find/reducers';
+import dealsReducers from './deals/reducers';
 
 const loggerMiddleware = createLogger();
 
@@ -14,5 +15,9 @@ const createStoreWithMiddleware = applyMiddleware(
 )(createStore);
 
 export default function configureStore(initialState) {
-  return createStoreWithMiddleware(combineReducers({ router: routerReducer, finder: finderReducers }), initialState);
+  return createStoreWithMiddleware(combineReducers({ 
+    router: routerReducer, 
+    finder: finderReducers,
+    deals: dealsReducers 
+  }), initialState);
 };

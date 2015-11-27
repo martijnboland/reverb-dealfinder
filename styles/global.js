@@ -11,7 +11,6 @@ export const colors = {
 
 export const styles = StyleSheet.create({
   header: {
-    marginBottom: 10,
     backgroundColor: colors.mainAccent,
     padding: 5,
     justifyContent: 'space-between',

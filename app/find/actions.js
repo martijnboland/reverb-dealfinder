@@ -291,7 +291,6 @@ export function findDealsForCategory(category) {
 }
 
 export function findMoreDeals() {
-  console.log('Moar deals!');
   return (dispatch, getState) => {
     if (canGetMorePriceGuides(getState())) {
       return dispatch(dispatch => {
