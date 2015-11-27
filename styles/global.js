@@ -21,7 +21,8 @@ export const styles = StyleSheet.create({
     alignItems: 'flex-end'
   },
   navbarButton: {
-    flex: 1
+    flex: 1,
+    padding: 5
   },
   navbarButtonText: {
     color: '#fff',
@@ -29,7 +30,8 @@ export const styles = StyleSheet.create({
   },
   title: {
     alignItems: 'center',
-    flex: 1 
+    flex: 1,
+    padding: 5 
   },
   titleText: {
     fontSize: 18,
