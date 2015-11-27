@@ -1,0 +1,1 @@
+This is a proof of concept app built with React Native and Redux to find interesting deals on Reverb.com.
