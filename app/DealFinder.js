@@ -39,7 +39,7 @@ class App extends React.Component {
   componentWillReceiveProps(nextProps) {
     // Check if initial data is ready and navigate to finder
     if (this.props.categories.items.length === 0 && nextProps.categories && nextProps.categories.items.length > 0) {
-      this.props.dispatch(navigateTo('/finder'));
+      this.props.dispatch(navigateTo('/finder', true));
     }
   }
 

@@ -13,29 +13,30 @@ class Router extends React.Component {
     currentRoute: false
   };
 
-  constructor(props) {
-    super(props);
-
-    this.routeNames = [props.registry.getInitialRoute().path];
-  }
-
-  navigateTo(path) {
-    const route = this.props.registry.getRouteByPath(path);
+  navigateTo(currentRoute) {
+    const route = this.props.registry.getRouteByPath(currentRoute.path);
     const currentNavigatorRoutes = this.refs.navigator.getCurrentRoutes();
 
-    // Check if the route is known in the navigator. If so, pop to that route
-    // or else push a new route.
-    const navigatorRoute = currentNavigatorRoutes.find((r) => { return r.path === route.path });
-
-    if (navigatorRoute) {
-      this.refs.navigator.popToRoute(navigatorRoute);
-    } else {
-      this.refs.navigator.push(route);
+    if (currentRoute.shouldReset) {
+      this.refs.navigator.popToTop();
+      this.refs.navigator.replace(route);      
     }
+    else {
+      // Check if the route is known in the navigator. If so, pop to that route
+      // or else push a new route.
+      const navigatorRoute = currentNavigatorRoutes.find((r) => { return r.path === route.path });
+  
+      if (navigatorRoute) {
+        this.refs.navigator.popToRoute(navigatorRoute);
+      } else {
+        this.refs.navigator.push(route);
+      }
+        
+      }
   }
 
   componentWillReceiveProps(nextProps) {
-    if (this.props.currentRoute !== nextProps.currentRoute) {
+    if (nextProps.currentRoute && (!this.props.currentRoute || this.props.currentRoute.path !== nextProps.currentRoute.path)) {
       // change the current page to navigate
       this.navigateTo(nextProps.currentRoute);
     }
