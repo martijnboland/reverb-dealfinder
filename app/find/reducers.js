@@ -91,7 +91,6 @@ function priceGuides(state = priceGuidesInitialState, action) {
           priceGuides.push(priceGuideToAdd);
         }
       }
-      priceGuides.push(...priceGuidesToAdd);
       var nextState = {
         ...state,
         bySearchTerm: {

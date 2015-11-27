@@ -120,16 +120,16 @@ function getDealsForPriceGuide(priceGuide) {
   // When an exact year is returned we're going to look for items that are approximately the same age (± 5 years).
   if (isNaN(year)) {
     decade = year;
-    // Extract year from decade to narrow search
-    const re = /\d{4}/
-    const yearFromDecade = decade.match(re);
-    if (yearFromDecade && yearFromDecade.length > 0) {
-      yearFrom = parseInt(yearFromDecade);
-      yearTo = yearFrom + 10;
-    }
+    // // Extract year from decade to narrow search
+    // const re = /\d{4}/
+    // const yearFromDecade = decade.match(re);
+    // if (yearFromDecade && yearFromDecade.length > 0) {
+    //   yearFrom = parseInt(yearFromDecade);
+    //   yearTo = (yearFrom + 10);
+    // }
   } else {
-    yearFrom = (parseInt(year) - 2).toString();
-    yearTo = (parseInt(year) + 2).toString();
+    yearFrom = (parseInt(year)).toString();
+    yearTo = (parseInt(year)).toString();
   }
 
   // Check if estimated_value exists at all
@@ -145,8 +145,12 @@ function getDealsForPriceGuide(priceGuide) {
   const topPrice = parseInt(priceGuide.estimated_value.top_price);
   if (maxPrice > topPrice) {
     maxPrice = topPrice;
-  }  
-  const url = apiBaseAddress + encodeURI(`/listings?finish=${finish}&make=${make}&model=${model}&price_max=${maxPrice}&year_max=${yearTo}&year_min=${yearFrom}&decade=${decade}`);
+  }
+  
+  // Let's be realistic: an item with a price less than a quarter of the minimum price is probably not what we're looking for
+  let minPrice = parseInt(priceGuide.estimated_value.bottom_price) * 0.25;
+  
+  const url = apiBaseAddress + encodeURI(`/listings?finish=${finish}&make=${make}&query=${model}&price_max=${maxPrice}&price_min=${minPrice}&year_max=${yearTo}&year_min=${yearFrom}&decade=${decade}`);
 
   return {
     types: [DEALS_LISTINGS_REQUEST, DEALS_LISTINGS_SUCCESS, DEALS_LISTINGS_ERROR],
@@ -193,8 +197,20 @@ function getMorePriceGuides(state) {
   const { searchTerm, selectedCategory, priceGuides } = state.finder;
 
   if (searchTerm) {
-    // TODO
-    return;
+    const nextLinkParams = queryString.parse(queryString.extract(priceGuides.bySearchTerm.next));
+    const maxItemsAfterNextFetch = parseInt(nextLinkParams.page) * parseInt(nextLinkParams.per_page);
+    const nextLink = apiHost + priceGuides.bySearchTerm.next;
+
+    return {
+      types: [PRICEGUIDES_BY_SEARCHTERM_REQUEST, PRICEGUIDES_BY_SEARCHTERM_SUCCESS, PRICEGUIDES_BY_SEARCHTERM_ERROR],
+      shouldCallApi: state => ! priceGuides.bySearchTerm.isFetching && 
+        priceGuides.bySearchTerm.items.length < maxItemsAfterNextFetch &&
+        priceGuides.bySearchTerm.items.length < 50, // Be a little gentle on the Reverb API
+      callApi: () => fetch(nextLink),
+      payload: {
+        category: selectedCategory
+      }
+    };
   }
   if (selectedCategory) {
     const priceGuidesForCategory = priceGuides.byCategory[selectedCategory];

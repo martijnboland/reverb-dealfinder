@@ -110,6 +110,8 @@ export default class Products extends React.Component {
 
 }
 
+export default connect(dealsSelector)(Products)
+
 const styles = StyleSheet.create({
   container: {
     flex: 1
@@ -174,5 +176,3 @@ const styles = StyleSheet.create({
     marginTop: 2
   }
 });
-
-export default connect(dealsSelector)(Products)

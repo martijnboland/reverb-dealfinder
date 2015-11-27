@@ -53,7 +53,12 @@ export default createSelector(
     currentPriceGuides.items.forEach(pg => {
       const dealslistingsForCurrentPriceGuides = dealsListings[pg._links.self.href];
       if (dealslistingsForCurrentPriceGuides && dealslistingsForCurrentPriceGuides.items.length > 0) {
-        deals.push(...dealslistingsForCurrentPriceGuides.items);    
+        for (var i = 0; i < dealslistingsForCurrentPriceGuides.items.length; i++) {
+          const listing = dealslistingsForCurrentPriceGuides.items[i];
+          if (! deals.some(d => d.link === listing.link)) {
+            deals.push(listing);                    
+          }
+        }  
       } 
     });
         
