@@ -13,6 +13,7 @@ describe('Finder reducers', () => {
         didInvalidate: false,
         items: []
       },
+      searchTerm: null,
       selectedCategory: null,
       priceGuides: {
         bySearchTerm: {

@@ -3,11 +3,30 @@ import { colors } from '../../styles/global';
 
 export default class SearchInput extends React.Component {
 
+  constructor(props) {
+    super(props);
+    
+    this.state = {
+      searchTerm: props.searchTerm
+    }  
+  }
+  
+  componentWillReceiveProps(nextProps) {
+    this.setState({ searchTerm: nextProps.searchTerm });
+  }
+    
   render() {
     return (
       <Image source={require('../../img/kroam.png')} style={styles.container}>
         <View style={styles.searchContainer}>
-          <TextInput style={styles.searchTextInput} placeholder='Search for deals' />
+          <TextInput 
+            style={styles.searchTextInput} 
+            placeholder='Search for deals'
+            onChangeText={(text) => this.setState({ searchTerm: text })}
+            onSubmitEditing={() => this.props.onSearch(this.state.searchTerm)}
+            returnKeyType='search'
+            value={this.state.searchTerm}
+          />
         </View>
       </Image>      
     );

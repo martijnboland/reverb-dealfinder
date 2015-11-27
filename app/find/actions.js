@@ -8,9 +8,20 @@ export const CATEGORIES_REQUEST = 'CATEGORIES_REQUEST';
 export const CATEGORIES_SUCCESS = 'CATEGORIES_SUCCESS';
 export const CATEGORIES_ERROR = 'CATEGORIES_ERROR';
 
+export const SET_SEARCHTERM = 'SET_SEARCHTERM';
+export const RESET_SEARCHTERM = 'RESET_SEARCHTERM';
+
 export const SELECT_CATEGORY = 'SELECT_CATEGORY';
 export const RESET_CATEGORY = 'RESET_CATEGORY';
 
+export const DEALS_BY_SEARCHTERM_START = 'DEALS_BY_SEARCHTERM_START';
+export const DEALS_BY_SEARCHTERM_ERROR = 'DEALS_BY_SEARCHTERM_ERROR';
+export const PRICEGUIDES_BY_SEARCHTERM_REQUEST = 'PRICEGUIDES_BY_SEARCHTERM_REQUEST';
+export const PRICEGUIDES_BY_SEARCHTERM_SUCCESS = 'PRICEGUIDES_BY_SEARCHTERM_SUCCESS';
+export const PRICEGUIDES_BY_SEARCHTERM_ERROR = 'PRICEGUIDES_BY_SEARCHTERM_ERROR';
+
+export const DEALS_BY_CATEGORY_START = 'DEALS_BY_CATEGORY_START';
+export const DEALS_BY_CATEGORY_ERROR = 'DEALS_BY_CATEGORY_ERROR';
 export const PRICEGUIDES_BY_CATEGORY_REQUEST = 'PRICEGUIDES_BY_CATEGORY_REQUEST';
 export const PRICEGUIDES_BY_CATEGORY_SUCCESS = 'PRICEGUIDES_BY_CATEGORY_SUCCESS';
 export const PRICEGUIDES_BY_CATEGORY_ERROR = 'PRICEGUIDES_BY_CATEGORY_ERROR';
@@ -18,9 +29,6 @@ export const PRICEGUIDES_BY_CATEGORY_ERROR = 'PRICEGUIDES_BY_CATEGORY_ERROR';
 export const DEALS_LISTINGS_REQUEST = 'DEALS_LISTINGS_REQUEST';
 export const DEALS_LISTINGS_SUCCESS = 'DEALS_LISTINGS_SUCCESS';
 export const DEALS_LISTINGS_ERROR = 'DEALS_LISTINGS_ERROR';
-
-export const DEALS_BY_CATEGORY_START = 'DEALS_BY_CATEGORY_START';
-export const DEALS_BY_CATEGORY_ERROR = 'DEALS_BY_CATEGORY_ERROR';
 
 export const DEALS_MORE = 'DEALS_MORE';
 
@@ -33,6 +41,26 @@ export const DEALS_RESET = 'DEALS_RESET';
 export const RESET_ERROR_MESSAGE = 'RESET_ERROR_MESSAGE';
 
 // Action creators
+function setSearchTerm(searchTerm) {
+  return {
+    type: SET_SEARCHTERM,
+    searchTerm: searchTerm
+  }
+}
+
+function dealsBySearchTermStart() {
+  return {
+    type: DEALS_BY_SEARCHTERM_START
+  }
+}
+
+function dealsBySearchTermError(error) {
+  return {
+    type: DEALS_BY_SEARCHTERM_ERROR,
+    error: error
+  }
+}
+
 function selectCategory(category) {
   return {
     type: SELECT_CATEGORY,
@@ -51,6 +79,17 @@ function dealsByCategoryError(error) {
     type: DEALS_BY_CATEGORY_ERROR,
     error: error
   }
+}
+
+function getPriceGuidesBySearchTerm(searchTerm) {
+  return {
+    types: [PRICEGUIDES_BY_SEARCHTERM_REQUEST, PRICEGUIDES_BY_SEARCHTERM_SUCCESS, PRICEGUIDES_BY_SEARCHTERM_ERROR],
+    shouldCallApi: state => !state.finder.priceGuides.bySearchTerm.isFetching,
+    callApi: () => fetch(apiBaseAddress + '/priceguide' + encodeURI(`?query=${searchTerm}`)),
+    payload: {
+      searchTerm: searchTerm
+    }
+  };
 }
 
 function getPriceGuidesByCategory(category) {
@@ -81,9 +120,16 @@ function getDealsForPriceGuide(priceGuide) {
   // When an exact year is returned we're going to look for items that are approximately the same age (± 5 years).
   if (isNaN(year)) {
     decade = year;
+    // Extract year from decade to narrow search
+    const re = /\d{4}/
+    const yearFromDecade = decade.match(re);
+    if (yearFromDecade && yearFromDecade.length > 0) {
+      yearFrom = parseInt(yearFromDecade);
+      yearTo = yearFrom + 10;
+    }
   } else {
-    yearFrom = (parseInt(year) - 5).toString();
-    yearTo = (parseInt(year) + 5).toString();
+    yearFrom = (parseInt(year) - 2).toString();
+    yearTo = (parseInt(year) + 2).toString();
   }
 
   // Check if estimated_value exists at all
@@ -94,8 +140,8 @@ function getDealsForPriceGuide(priceGuide) {
     };
   }
 
-  // An listing is a good deal when the price is not higher than 20% of the lowest price
-  let maxPrice = parseInt(priceGuide.estimated_value.bottom_price) * 1.1;
+  // An listing is a good deal when the price is not higher than 10% of the lowest price
+  let maxPrice = parseInt(priceGuide.estimated_value.bottom_price) * 1.15;
   const topPrice = parseInt(priceGuide.estimated_value.top_price);
   if (maxPrice > topPrice) {
     maxPrice = topPrice;
@@ -134,7 +180,7 @@ function getDealsForPriceGuide(priceGuide) {
 function canGetMorePriceGuides(state) {
   const { searchTerm, selectedCategory, priceGuides } = state.finder;
   if (searchTerm) {
-    return priceGuides.bySeachTerm.next !== null && ! priceGuides.bySearchTerm.isFetching;
+    return priceGuides.bySearchTerm.next !== null && ! priceGuides.bySearchTerm.isFetching;
   }
   if (selectedCategory) {
     return priceGuides.byCategory[selectedCategory].next !== null &&
@@ -186,6 +232,27 @@ export function fetchCategoriesIfNeeded() {
   };
 }
 
+export function findDealsForSearchTerm(searchTerm) {
+  return (dispatch, getState) => {
+    return dispatch(dispatch => {
+      dispatch(setSearchTerm(searchTerm));
+      dispatch(dealsBySearchTermStart())
+      dispatch(getPriceGuidesBySearchTerm(searchTerm))
+        .then(priceGuidesResult => {
+          if (priceGuidesResult) {
+            priceGuidesResult.data.price_guides.forEach(priceGuide => {
+              dispatch(getDealsForPriceGuide(priceGuide));
+            });            
+          }
+          dispatch(navigateTo('/deals'));
+        })
+        .catch(error => {
+          dispatch(dealsBySearchTermError(error));
+        });
+    });
+  }  
+}
+
 export function findDealsForCategory(category) {
   return (dispatch, getState) => {
     return dispatch(dispatch => {
@@ -227,6 +294,12 @@ export function findMoreDeals() {
     } else {
       return Promise.resolve();
     }
+  }
+}
+
+export function resetSearchTerm() {
+  return {
+    type: RESET_SEARCHTERM
   }
 }
 

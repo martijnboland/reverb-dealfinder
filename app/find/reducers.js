@@ -32,11 +32,22 @@ function categories(state = categoriesInitialState, action) {
   }
 }
 
+function searchTerm(state = null, action) {
+  switch (action.type) {
+    case actions.SET_SEARCHTERM:
+      return action.searchTerm;
+    case actions.RESET_SEARCHTERM:
+      return null;
+    default:
+      return state;
+  }
+}
+
 function selectedCategory(state = null, action) {
   switch (action.type) {
     case actions.SELECT_CATEGORY:
       return action.category;
-    case action.RESET_CATEGORY:
+    case actions.RESET_CATEGORY:
       return null;
     default:
       return state;
@@ -55,6 +66,62 @@ const priceGuidesInitialState = {
 
 function priceGuides(state = priceGuidesInitialState, action) {
   switch (action.type) {
+    case actions.PRICEGUIDES_BY_SEARCHTERM_REQUEST:
+      var items = state.bySearchTerm ? state.bySearchTerm.items : [];
+      var nextState = { 
+        ...state,
+        bySearchTerm: {
+          ...state.bySearchTerm,
+          isFetching: true, 
+          didInvalidate: false,
+          items: items
+        }
+      };
+      return nextState;
+    case actions.PRICEGUIDES_BY_SEARCHTERM_SUCCESS:
+      var priceGuides = state.bySearchTerm ? state.bySearchTerm.items || [] : [];
+      var priceGuidesToAdd = action.data.price_guides;
+      for (let i = 0; i < priceGuidesToAdd.length; i++) {
+        // Only add when make, model, year combo does not exist. Finish is skipped because filtering listings
+        // on finish does not seem to work.
+        const priceGuideToAdd = priceGuidesToAdd[i];
+        if (! priceGuides.some(pg => {
+          pg.make === priceGuideToAdd.make && pg.model === priceGuideToAdd.model && pg.year === priceGuideToAdd.year 
+        })) {
+          priceGuides.push(priceGuideToAdd);
+        }
+      }
+      priceGuides.push(...priceGuidesToAdd);
+      var nextState = {
+        ...state,
+        bySearchTerm: {
+          ...state.bySearchTerm,
+          isFetching: false, 
+          didInvalidate: false,
+          items: priceGuides,
+          next: action.data._links && action.data._links.next ? action.data._links.next.href : null
+        }
+      };
+      return nextState;
+    case actions.PRICEGUIDES_BY_SEARCHTERM_ERROR:
+      return {
+        ...state,
+        bySearchTerm: {
+          ...state.bySearchTerm,
+          isFetching: false, 
+          didInvalidate: false
+        }
+      };
+    case actions.RESET_SEARCHTERM:
+      return {
+        ...state,
+        bySearchTerm: {
+          isFetching: false,
+          didInvalidate: false,
+          items: [],
+          next: null
+        }
+      };
     case actions.PRICEGUIDES_BY_CATEGORY_REQUEST:
       var items = state.byCategory[action.category] ? state.byCategory[action.category].items : [];
       var nextState = { 
@@ -71,7 +138,7 @@ function priceGuides(state = priceGuidesInitialState, action) {
       };
       return nextState;
     case actions.PRICEGUIDES_BY_CATEGORY_SUCCESS:
-      const priceGuides = state.byCategory[action.category] ? state.byCategory[action.category].items || [] : [];
+      var priceGuides = state.byCategory[action.category] ? state.byCategory[action.category].items || [] : [];
       priceGuides.push(...action.data.price_guides);
       var nextState = {
         ...state,
@@ -98,7 +165,7 @@ function priceGuides(state = priceGuidesInitialState, action) {
             didInvalidate: false
           }
         }
-      };
+      };      
     default:
       return state;
   }
@@ -157,6 +224,7 @@ function errorMessage(state = null, action) {
 
 const rootReducer = combineReducers({
   categories,
+  searchTerm,
   selectedCategory,
   priceGuides,
   dealsListings,

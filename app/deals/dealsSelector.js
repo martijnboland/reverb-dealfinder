@@ -1,20 +1,12 @@
 import { createSelector } from 'reselect';
 
-function selectDeals(currentPriceGuides, allDealsListings) {
-  let deals = [];
-  
-  currentPriceGuides.items.forEach(pg => {
-    const dealslistings = allDealsListings[pg._links.self.href];
-    if (dealslistings) {
-      deals.push(...dealslistings.items);    
-    } 
-  });
-  return deals;
-}
-
-function createTitle(searchTerm, selectedCategory, categories) {
+function createTitle(searchTerm, selectedCategory, categories, currentPriceGuides, deals) {
   if (searchTerm) {
-    return `Deals found for '${searchTerm}'`;
+    if ((! currentPriceGuides.next) && deals.length === 0) {
+      return `No deals found for '${searchTerm}'`;
+    } else {
+      return `Deals found for '${searchTerm}'`;    
+    }
   }
   if (selectedCategory) {
     const category = categories.items.find(el => {
@@ -56,9 +48,18 @@ export default createSelector(
       currentPriceGuides = allPriceGuides.byCategory[selectedCategory];
     }
     
+    let deals = [];
+  
+    currentPriceGuides.items.forEach(pg => {
+      const dealslistingsForCurrentPriceGuides = dealsListings[pg._links.self.href];
+      if (dealslistingsForCurrentPriceGuides && dealslistingsForCurrentPriceGuides.items.length > 0) {
+        deals.push(...dealslistingsForCurrentPriceGuides.items);    
+      } 
+    });
+        
     return {
-      deals: selectDeals(currentPriceGuides, dealsListings),
-      title: createTitle(searchTerm, selectedCategory, categories),
+      deals: deals,
+      title: createTitle(searchTerm, selectedCategory, categories, currentPriceGuides, deals),
       canLoadMoreDeals: canLoadMoreDeals(currentPriceGuides),
       isLoading: isLoading(currentPriceGuides, dealsListings)
     }

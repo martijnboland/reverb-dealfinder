@@ -3,22 +3,15 @@ import { connect } from 'react-redux/native';
 
 import SearchInput from './SearchInput';
 import CategoryBrowser from './CategoryBrowser';
-import { findDealsForCategory, resetCategory } from './actions';
+import { findDealsForCategory, findDealsForSearchTerm, resetSearchTerm, resetCategory } from './actions';
 
 class Finder extends React.Component {
-
-  componentWillReceiveProps(nextProps) {
-    // Reset category 
-    if (nextProps.selectedCategory) {
-      this.props.dispatch(resetCategory());
-    }
-  }
-
+    
   render() {
     return (
       <View style={styles.container}>
         <View style={styles.searchinput}>
-          <SearchInput />
+          <SearchInput searchTerm={this.props.searchTerm} onSearch={(searchTerm) => this.props.dispatch(findDealsForSearchTerm(searchTerm))} />
         </View>
         <View style={styles.categorybrowser}>
           <CategoryBrowser categories={this.props.categories} onSelectCategory={(category) => this.props.dispatch(findDealsForCategory(category))} />
@@ -44,6 +37,7 @@ const styles = StyleSheet.create({
 function mapStateToProps(state) {
   return {
     categories: state.finder.categories.items,
+    searchTerm: state.finder.searchTerm,
     selectedCategory: state.finder.selectedCategory
   };
 }

@@ -3,7 +3,7 @@ import { connect } from 'react-redux/native';
 
 import navigateTo from '../shared/router/routerActions';
 import dealsSelector from './dealsSelector';
-import { findMoreDeals } from '../find/actions';
+import { findMoreDeals, resetSearchTerm, resetCategory } from '../find/actions';
 import Spinner from '../shared/components/Spinner';
 import { colors, styles as globalStyles } from '../../styles/global';
 
@@ -37,6 +37,11 @@ export default class Products extends React.Component {
         this._getMoreDeals();      
       }
     }
+  }
+  
+  componentWillUnmount() {
+    this.props.dispatch(resetSearchTerm());
+    this.props.dispatch(resetCategory());
   }
   
   _getMoreDeals() {
