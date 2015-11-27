@@ -253,6 +253,7 @@ export function findDealsForSearchTerm(searchTerm) {
     return dispatch(dispatch => {
       dispatch(setSearchTerm(searchTerm));
       dispatch(dealsBySearchTermStart())
+      dispatch(navigateTo('/deals'));
       dispatch(getPriceGuidesBySearchTerm(searchTerm))
         .then(priceGuidesResult => {
           if (priceGuidesResult) {
@@ -260,7 +261,6 @@ export function findDealsForSearchTerm(searchTerm) {
               dispatch(getDealsForPriceGuide(priceGuide));
             });            
           }
-          dispatch(navigateTo('/deals'));
         })
         .catch(error => {
           dispatch(dealsBySearchTermError(error));
@@ -274,6 +274,7 @@ export function findDealsForCategory(category) {
     return dispatch(dispatch => {
       dispatch(selectCategory(category));
       dispatch(dealsByCategoryStart())
+      dispatch(navigateTo('/deals'));
       dispatch(getPriceGuidesByCategory(category))
         .then(priceGuidesResult => {
           if (priceGuidesResult) {
@@ -281,7 +282,6 @@ export function findDealsForCategory(category) {
               dispatch(getDealsForPriceGuide(priceGuide));
             });            
           }
-          dispatch(navigateTo('/deals'));
         })
         .catch(error => {
           dispatch(dealsByCategoryError(error));

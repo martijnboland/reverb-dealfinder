@@ -39,13 +39,16 @@ const categoriesSelector = (state) => state.finder.categories;
 export default createSelector(
   [ searchTermSelector, selectedCategorySelector, priceGuidesSelector, dealsListingsSelector, categoriesSelector ],
   (searchTerm, selectedCategory, allPriceGuides, dealsListings, categories) => {
-    let currentPriceGuides = [];
+    const defaultPriceGuides = {
+      items: []
+    };
+    let currentPriceGuides = defaultPriceGuides;
     
     if (searchTerm) {
-      currentPriceGuides = allPriceGuides.bySearchTerm;
+      currentPriceGuides = allPriceGuides.bySearchTerm || defaultPriceGuides;
     } 
     else if (selectedCategory) {
-      currentPriceGuides = allPriceGuides.byCategory[selectedCategory];
+      currentPriceGuides = allPriceGuides.byCategory[selectedCategory] || defaultPriceGuides;
     }
     
     let deals = [];
