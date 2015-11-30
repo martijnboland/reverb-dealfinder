@@ -33,14 +33,14 @@ export default class Listing extends React.Component {
     return (
       <View style={styles.container}>
         <View style={globalStyles.header}>
-          <View style={globalStyles.navbarButton}>
-          </View>
+          <TouchableOpacity onPress={this._onClose} style={[globalStyles.navbarButton]}>
+            <Text style={globalStyles.navbarButtonText}>Close</Text>
+          </TouchableOpacity>            
           <View style={globalStyles.title}>
             <Text style={globalStyles.titleText}>Listing</Text>
           </View>
-          <TouchableOpacity onPress={this._onClose} style={[globalStyles.navbarButton, globalStyles.headerRight]}>
-            <Text style={globalStyles.navbarButtonText}>Close</Text>
-          </TouchableOpacity>            
+          <View style={globalStyles.navbarButton}>
+          </View>
         </View>
         {this._renderWebView()}
       </View>      

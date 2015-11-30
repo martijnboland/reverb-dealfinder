@@ -83,7 +83,7 @@ export default class Products extends React.Component {
             <View style={styles.prices}>
               <Text style={styles.price}>{deal.price.symbol} {deal.price.amount}</Text>              
               <Text style={styles.pricerange}>
-                {deal.bottom} - {deal.top}
+                $ {deal.bottom} - $ {deal.top}
               </Text>
             </View>
           </View>
@@ -106,7 +106,7 @@ export default class Products extends React.Component {
       <View style={styles.container}>
         <View style={globalStyles.header}>
          <TouchableOpacity onPress={this._onGoBack} style={globalStyles.navbarButton}>
-            <Text style={globalStyles.navbarButtonText}>Back</Text>
+            <Text style={globalStyles.navbarButtonText}>&lt; Back</Text>
           </TouchableOpacity>
           <View style={globalStyles.title}>
             <Text style={globalStyles.titleText}>Deals</Text>
