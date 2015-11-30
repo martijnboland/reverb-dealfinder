@@ -41,7 +41,7 @@ export const DEALS_RESET = 'DEALS_RESET';
 export const RESET_ERROR_MESSAGE = 'RESET_ERROR_MESSAGE';
 
 // Action creators
-function setSearchTerm(searchTerm) {
+export function setSearchTerm(searchTerm) {
   return {
     type: SET_SEARCHTERM,
     searchTerm: searchTerm
@@ -61,7 +61,7 @@ function dealsBySearchTermError(error) {
   }
 }
 
-function selectCategory(category) {
+export function selectCategory(category) {
   return {
     type: SELECT_CATEGORY,
     category: category
@@ -187,7 +187,7 @@ function canGetMorePriceGuides(state) {
     return priceGuides.bySearchTerm.next !== null && ! priceGuides.bySearchTerm.isFetching;
   }
   if (selectedCategory) {
-    return priceGuides.byCategory[selectedCategory].next !== null &&
+    return priceGuides.byCategory[selectedCategory] && priceGuides.byCategory[selectedCategory].next !== null &&
       ! priceGuides.byCategory[selectedCategory].isFetching;
   }
   return false;
@@ -251,9 +251,7 @@ export function fetchCategoriesIfNeeded() {
 export function findDealsForSearchTerm(searchTerm) {
   return (dispatch, getState) => {
     return dispatch(dispatch => {
-      dispatch(setSearchTerm(searchTerm));
       dispatch(dealsBySearchTermStart())
-      dispatch(navigateTo('/deals'));
       dispatch(getPriceGuidesBySearchTerm(searchTerm))
         .then(priceGuidesResult => {
           if (priceGuidesResult) {
@@ -272,9 +270,7 @@ export function findDealsForSearchTerm(searchTerm) {
 export function findDealsForCategory(category) {
   return (dispatch, getState) => {
     return dispatch(dispatch => {
-      dispatch(selectCategory(category));
       dispatch(dealsByCategoryStart())
-      dispatch(navigateTo('/deals'));
       dispatch(getPriceGuidesByCategory(category))
         .then(priceGuidesResult => {
           if (priceGuidesResult) {

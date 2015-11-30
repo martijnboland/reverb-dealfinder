@@ -1,10 +1,10 @@
-import React, { View, Text, StyleSheet, TouchableOpacity, ListView, Image } from 'react-native';
+import React, { View, Text, StyleSheet, TouchableOpacity, ListView, Image, InteractionManager } from 'react-native';
 import { connect } from 'react-redux/native';
 
 import navigateTo from '../shared/router/routerActions';
-import dealsSelector from './dealsSelector';
-import { findMoreDeals, resetSearchTerm, resetCategory } from '../find/actions';
+import { findDealsForSearchTerm, findDealsForCategory, findMoreDeals, resetSearchTerm, resetCategory } from '../find/actions';
 import { gotoListing } from './actions';
+import dealsSelector from './dealsSelector';
 import Spinner from '../shared/components/Spinner';
 import { colors, styles as globalStyles } from '../../styles/global';
 
@@ -24,6 +24,18 @@ export default class Products extends React.Component {
     this._onGoBack = this._onGoBack.bind(this);
     this._getMoreDeals = this._getMoreDeals.bind(this);
   }
+  
+  componentDidMount() {
+    InteractionManager.runAfterInteractions(() => {
+      this.setState({ isLoading: true })
+      if (this.props.searchTerm) {
+        this.props.dispatch(findDealsForSearchTerm(this.props.searchTerm));
+      } 
+      else if (this.props.selectedCategory) {
+        this.props.dispatch(findDealsForCategory(this.props.selectedCategory));
+      }
+    });
+  }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.deals) {
@@ -32,7 +44,7 @@ export default class Products extends React.Component {
     const wasLoading = this.state.isLoading;
     this.state.isLoading = nextProps.isLoading;
     
-    if (wasLoading && ! nextProps.isLoading) {
+    if (wasLoading && ! nextProps.isLoading && nextProps.deals) {
       // Get more deals when the listview is not filling the screen
       if (this._listView.scrollProperties.contentLength < this._listView.props.scrollRenderAheadDistance) {
         this._getMoreDeals();      
@@ -61,22 +73,22 @@ export default class Products extends React.Component {
   
   _renderRow(deal) {
     return (
-      <View style={styles.row}>
-        <TouchableOpacity onPress={() => this._onGoToListing(deal.link)} underlayColor="transparent">
+     <TouchableOpacity onPress={() => this._onGoToListing(deal.link)} underlayColor="transparent">
+        <View style={styles.row}>
           <Image source={{uri: deal.thumbnail}} style={styles.thumbnail} />
-        </TouchableOpacity>
-        <View style={styles.dealcontainer}>
-          <View style={styles.dealtext}>
-            <Text style={styles.dealtitle}>{deal.title}</Text>
-          </View>
-          <View style={styles.prices}>
-            <Text style={styles.price}>{deal.price.symbol} {deal.price.amount}</Text>              
-            <Text style={styles.pricerange}>
-              {deal.bottom} - {deal.top}
-            </Text>
+          <View style={styles.dealcontainer}>
+            <View style={styles.dealtext}>
+              <Text style={styles.dealtitle}>{deal.title}</Text>
+            </View>
+            <View style={styles.prices}>
+              <Text style={styles.price}>{deal.price.symbol} {deal.price.amount}</Text>              
+              <Text style={styles.pricerange}>
+                {deal.bottom} - {deal.top}
+              </Text>
+            </View>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   }
     
@@ -142,7 +154,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     borderWidth: 0.5,
     borderRadius: 2,
-    borderColor: '#ddd'
+    borderColor: '#ddd',
+    height: 96
   },
   thumbnail: {
     width: 96,

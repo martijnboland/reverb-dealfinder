@@ -66,6 +66,8 @@ export default createSelector(
     });
         
     return {
+      searchTerm: searchTerm,
+      selectedCategory: selectedCategory,
       deals: deals,
       title: createTitle(searchTerm, selectedCategory, categories, currentPriceGuides, deals),
       canLoadMoreDeals: canLoadMoreDeals(currentPriceGuides),
