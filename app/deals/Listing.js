@@ -2,7 +2,7 @@ import React, { View, Text, StyleSheet, TouchableOpacity, WebView, Platform } fr
 import WebViewAndroid from 'react-native-webview-android';
 import { connect } from 'react-redux/native';
 
-import navigateTo from '../shared/router/routerActions';
+import { navigateTo } from '../shared/router/routerActions';
 import { colors, styles as globalStyles } from '../../styles/global';
 
 export default class Listing extends React.Component {

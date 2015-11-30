@@ -1,7 +1,6 @@
 import queryString from 'query-string';
 
 import { apiHost, apiBaseAddress } from '../shared/constants';
-import navigateTo from '../shared/router/routerActions';
 
 // Actions
 export const CATEGORIES_REQUEST = 'CATEGORIES_REQUEST';

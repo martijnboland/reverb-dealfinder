@@ -1,4 +1,4 @@
-import navigateTo from '../shared/router/routerActions';
+import { navigateTo } from '../shared/router/routerActions';
 
 export const SET_LISTING = 'SET_LISTING';
 function setListing(link) {

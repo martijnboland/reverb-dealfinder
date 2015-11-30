@@ -1,9 +1,16 @@
-import React, { Navigator } from 'react-native';
+import React, { Navigator, BackAndroid, Platform } from 'react-native';
 
 import RouterRegistry from './RouterRegistry';
-import navigateTo from './routerActions';
+import { navigateTo, didNavigateTo } from './routerActions';
 
 class Router extends React.Component {
+  
+  constructor(props) {
+    super(props);
+    
+    this._navigateTo = this._navigateTo.bind(this);
+    this._setNavigatorRef = this._setNavigatorRef.bind(this); 
+  }
 
   static propTypes = {
     registry: React.PropTypes.object.isRequired
@@ -13,13 +20,13 @@ class Router extends React.Component {
     currentRoute: false
   };
 
-  navigateTo(currentRoute) {
+  _navigateTo(currentRoute) {
     const route = this.props.registry.getRouteByPath(currentRoute.path);
-    const currentNavigatorRoutes = this.refs.navigator.getCurrentRoutes();
+    const currentNavigatorRoutes = this._navigator.getCurrentRoutes();
 
     if (currentRoute.shouldReset) {
-      this.refs.navigator.popToTop();
-      this.refs.navigator.replace(route);      
+      this._navigator.popToTop();
+      this._navigator.replace(route);      
     }
     else {
       // Check if the route is known in the navigator. If so, pop to that route
@@ -27,24 +34,50 @@ class Router extends React.Component {
       const navigatorRoute = currentNavigatorRoutes.find((r) => { return r.path === route.path });
   
       if (navigatorRoute) {
-        this.refs.navigator.popToRoute(navigatorRoute);
+        this._navigator.popToRoute(navigatorRoute);
       } else {
-        this.refs.navigator.push(route);
-      }
-        
-      }
+        this._navigator.push(route);
+      }        
+    }
   }
+  
+  _setNavigatorRef(navigator) {
+    this._listeners = [];
 
+    if (navigator !== this._navigator) {
+      this._navigator = navigator;
+
+      if (navigator) {
+        
+        if (Platform.OS === 'android') {
+          BackAndroid.addEventListener('hardwareBackPress', () => {
+            navigator.pop();
+            return  true;
+          });
+        }
+        
+        this._listeners.push(navigator.navigationContext.addListener('didfocus', (event) => {
+          // sync route with state
+          this.props.onRouteChanged(event.data.route.path)
+        }));
+      }
+    }
+  }
+  
   componentWillReceiveProps(nextProps) {
     if (nextProps.currentRoute && (!this.props.currentRoute || this.props.currentRoute.path !== nextProps.currentRoute.path)) {
       // change the current page to navigate
-      this.navigateTo(nextProps.currentRoute);
+      this._navigateTo(nextProps.currentRoute);
     }
+  }
+  
+  componentWillUnmount() {
+    this._listeners && this._listeners.forEach(listener => listener.remove());
   }
 
   render() {
     return <Navigator
-      ref="navigator"
+      ref={this._setNavigatorRef}
       initialRoute={this.props.registry.getInitialRoute()}
       {...this.props}
       configureScene={(route) => route.sceneConfig || Navigator.SceneConfigs.FloatFromRight}/>
@@ -54,5 +87,6 @@ class Router extends React.Component {
 export {
   Router,
   RouterRegistry,
-  navigateTo
+  navigateTo,
+  didNavigateTo
 }

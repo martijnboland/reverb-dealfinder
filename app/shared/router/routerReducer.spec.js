@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 import routerReducer from './routerReducer';
 import * as actionTypes from './routerConstants';
-import navigateTo from './routerActions';
+import { navigateTo } from './routerActions';
 
 describe('Router reducer', () => {
   it('returns initial state when nothing happened', () => {

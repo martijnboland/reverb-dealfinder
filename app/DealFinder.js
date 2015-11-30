@@ -1,7 +1,7 @@
 import React, { View, StyleSheet, Navigator } from 'react-native';
 import { connect } from 'react-redux/native';
 
-import { Router, RouterRegistry, navigateTo } from './shared/router/Router';
+import { Router, RouterRegistry, navigateTo, didNavigateTo } from './shared/router/Router';
 import { fetchCategoriesIfNeeded } from './find/actions';
 import { colors } from '../styles/global';
 
@@ -52,6 +52,7 @@ class App extends React.Component {
           registry={this._getRouterRegistry()}
           renderScene={this._renderScene}
           style={styles.navigator}
+          onRouteChanged={(route) => this.props.dispatch(didNavigateTo(route))}
           {...this.props} />
       </View>
     );

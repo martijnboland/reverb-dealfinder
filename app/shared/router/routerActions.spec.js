@@ -1,5 +1,5 @@
 import * as actionTypes from './routerConstants';
-import navigateTo from './routerActions';
+import { navigateTo } from './routerActions';
 import { expect } from 'chai';
 
 describe('Router navigateTo Action', () => {

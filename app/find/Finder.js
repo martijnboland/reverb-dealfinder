@@ -3,7 +3,7 @@ import { connect } from 'react-redux/native';
 
 import SearchInput from './SearchInput';
 import CategoryBrowser from './CategoryBrowser';
-import navigateTo from '../shared/router/routerActions';
+import { navigateTo } from '../shared/router/routerActions';
 import { setSearchTerm, selectCategory, resetSearchTerm, resetCategory } from './actions';
 
 class Finder extends React.Component {

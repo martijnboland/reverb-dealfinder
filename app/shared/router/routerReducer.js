@@ -13,6 +13,13 @@ export default function route(state=initialState, action={}) {
            shouldReset: action.reset
          }
       }};
+    case actionTypes.DID_NAVIGATE_TO:
+      return {...state, ...{
+        currentRoute: {
+          path: action.path,
+          shouldReset: false
+        }
+      }};
     default:
       return state;
   }
