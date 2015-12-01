@@ -6,13 +6,19 @@ export default class CategoryBrowser extends React.Component {
   constructor(props) {
     super(props);
 
-    const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+    this._ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
     this.state = {
-      dataSource: ds.cloneWithRows(props.categories)
+      dataSource: this._ds.cloneWithRows(props.categories)
     }
 
     this._renderRow = this._renderRow.bind(this);
     this._onSelectCategory = this._onSelectCategory.bind(this);
+  }
+  
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.categories) {
+      this.state.dataSource = this._ds.cloneWithRows(nextProps.categories);
+    }
   }
 
   _onSelectCategory(category) {
@@ -33,7 +39,7 @@ export default class CategoryBrowser extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, this.props.style]}>
         <Text style={styles.title}>Browse deals by category</Text>
         <ListView
           dataSource={this.state.dataSource}
@@ -48,7 +54,8 @@ export default class CategoryBrowser extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    backgroundColor: colors.mainBackground
   },
   title: {
     color: colors.textLight,

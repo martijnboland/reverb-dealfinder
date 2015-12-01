@@ -5,21 +5,34 @@ import { Router, RouterRegistry, navigateTo, didNavigateTo } from './shared/rout
 import { fetchCategoriesIfNeeded } from './find/actions';
 import { colors } from '../styles/global';
 
+import Loading from './Loading';
+import Finder from './find/Finder';
+
 class App extends React.Component {
   constructor(props) {
     super(props);
+
+    this.state = { 
+      isWide: false 
+    };
+    
+    this._onViewLayout = this._onViewLayout.bind(this);
   }
 
   _getRouterRegistry(){
     let registry = new RouterRegistry({
-      initialRoute: { path: '/', title: '', component: () => require('./Loading') }
+      initialRoute: { path: '/', title: '', component: () => Loading }
     });
+    
+    let routes = [];
+    if (! this.state.isWide) {
+      routes.push({ path: '/finder', title: 'Find deals', component: () => Finder });
+    }
 
-    registry.registerRoutes([
-      { path: '/finder', title: 'Find deals', component: () => require('./find/Finder') },
-      { path: '/deals', title: 'Products', component: () => require('./deals/Products') },
-      { path: '/listing', title: 'Listing', component: () => require('./deals/Listing'), sceneConfig: Navigator.SceneConfigs.FloatFromBottom }
-    ]);
+    routes.push({ path: '/deals', title: 'Products', component: () => require('./deals/Products') });
+    routes.push({ path: '/listing', title: 'Listing', component: () => require('./deals/Listing'), sceneConfig: Navigator.SceneConfigs.FloatFromBottom });
+
+    registry.registerRoutes(routes);
 
     return registry;
   }
@@ -33,20 +46,27 @@ class App extends React.Component {
     }
   }
 
-  componentDidMount() {
-    this.props.dispatch(fetchCategoriesIfNeeded());
+  _onViewLayout(event) {
+    const {x, y, width, height} = event.nativeEvent.layout;
+    this.setState({ isWide: width > 800 })
   }
-
-  componentWillReceiveProps(nextProps) {
-    // Check if initial data is ready and navigate to finder
-    if (this.props.categories.items.length === 0 && nextProps.categories && nextProps.categories.items.length > 0) {
-      this.props.dispatch(navigateTo('/finder', true));
-    }
-  }
-
-  render() {
-    return (
-      <View style={styles.container}>
+  
+  _renderLayout() {
+    if (this.state.isWide) {
+      return (
+        <View style={styles.twocolumns}>
+          <Finder style={styles.side} categoriesStyle={styles.categories} />
+          <Router
+            currentRoute={this.props.currentRoute}
+            registry={this._getRouterRegistry()}
+            renderScene={this._renderScene}
+            style={[styles.navigator, styles.main]}
+            onRouteChanged={(route) => this.props.dispatch(didNavigateTo(route))}
+            {...this.props} />
+        </View>
+      )
+    } else {
+      return (
         <Router
           currentRoute={this.props.currentRoute}
           registry={this._getRouterRegistry()}
@@ -54,8 +74,31 @@ class App extends React.Component {
           style={styles.navigator}
           onRouteChanged={(route) => this.props.dispatch(didNavigateTo(route))}
           {...this.props} />
+      )
+    }
+  }
+
+  componentDidMount() {
+    this.props.dispatch(fetchCategoriesIfNeeded());
+  }
+
+  componentWillReceiveProps(nextProps) {
+    // Check if initial data is ready and navigate to finder when not in wide mode
+    if (this.props.categories.items.length === 0 && 
+      nextProps.categories && 
+      nextProps.categories.items.length > 0 &&
+      !this.state.isWide) {
+      console.log('Received categories');
+      this.props.dispatch(navigateTo('/finder', true));
+    }
+  }
+  
+  render() {
+    return (
+      <View style={styles.container} onLayout={this._onViewLayout}>
+        {this._renderLayout()}
       </View>
-    );
+    )
   }
 
 }
@@ -69,6 +112,18 @@ const styles = StyleSheet.create({
   navigator: {
     flex: 1,
     backgroundColor: colors.mainBackground
+  },
+  twocolumns: {
+    flex: 1,
+    flexDirection: 'row'
+  },
+  side: {
+  },
+  categories: {
+    backgroundColor: '#444'
+  },
+  main: {
+    flex: 2
   }
 });
 

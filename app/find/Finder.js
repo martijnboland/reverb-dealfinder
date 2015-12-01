@@ -27,12 +27,12 @@ class Finder extends React.Component {
     
   render() {
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, this.props.style]}>
         <View style={styles.searchinput}>
           <SearchInput searchTerm={this.props.searchTerm} onSearch={(searchTerm) => this._onFindDealsForSearchTerm(searchTerm)} />
         </View>
         <View style={styles.categorybrowser}>
-          <CategoryBrowser categories={this.props.categories} onSelectCategory={(category) => this._onFindDealsForCategory(category)} />
+          <CategoryBrowser style={this.props.categoriesStyle} categories={this.props.categories} onSelectCategory={(category) => this._onFindDealsForCategory(category)} />
         </View>
       </View>      
     );
