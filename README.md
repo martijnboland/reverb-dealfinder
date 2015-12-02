@@ -3,6 +3,8 @@ and [Redux](http://redux.js.org/) for both iOS and Android to find interesting d
 
 You can search for gear or browse categories. The app uses the Reverb price guide to determine the going rate of the instruments and then finds all listings with an interesting price. Viewing details of a listing takes you to the Reverb.com web site.
 
+The app works on both phones and tablets. In landscape mode on a tablet, the layout changes automatically and the search screen turns into a side bar.
+
 Note: since this is only an example app for developers, there are no guarantees whatsoever about the correctness of the search results. Do not use it for serious gear hunting :-).
 
 ![Find](https://raw.githubusercontent.com/martijnboland/reverb-dealfinder/master/docs/screenshots/find.png)
