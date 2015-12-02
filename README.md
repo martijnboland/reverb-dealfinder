@@ -5,6 +5,9 @@ You can search for gear or browse categories. The app uses the Reverb price guid
 
 Note: since this is only an example app for developers, there are no guarantees whatsoever about the correctness of the search results. Do not use it for serious gear hunting :-).
 
+![Find](https://raw.githubusercontent.com/martijnboland/reverb-dealfinder/master/docs/screenshots/find.png)
+![Deals](https://raw.githubusercontent.com/martijnboland/reverb-dealfinder/master/docs/screenshots/deals.png)
+
 # Getting Started
 
 ## Prerequisites
@@ -51,12 +54,7 @@ react-native run-android
 npm run test
 ``` 
 
-#Screenshots
-
-iPhone:
-
-![Find](https://raw.githubusercontent.com/martijnboland/reverb-dealfinder/master/docs/screenshots/find.png)
-![Deals](https://raw.githubusercontent.com/martijnboland/reverb-dealfinder/master/docs/screenshots/deals.png)
+#More screenshots
 
 iPad:
 
