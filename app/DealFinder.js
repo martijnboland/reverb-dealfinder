@@ -3,6 +3,7 @@ import { connect } from 'react-redux/native';
 
 import { Router, RouterRegistry, navigateTo, didNavigateTo } from './shared/router/Router';
 import { fetchCategoriesIfNeeded } from './find/actions';
+import { changeLayout } from './shared/layout/actions';
 import { colors } from '../styles/global';
 
 import Loading from './Loading';
@@ -12,29 +13,45 @@ class App extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = { 
-      isWide: false 
-    };
-    
+    this._routerRegistry = this._buildRouterRegistry(false);
+
     this._onViewLayout = this._onViewLayout.bind(this);
   }
+  
+  componentDidMount() {
+    this.props.dispatch(fetchCategoriesIfNeeded());
+  }
 
-  _getRouterRegistry(){
-    let registry = new RouterRegistry({
+  componentWillReceiveProps(nextProps) {
+    // Rebuild navigation when switching from wide to non-wide and vice-versa
+    if (nextProps.layout.isWide !== this.props.layout.isWide) {
+      if (! nextProps.layout.isWide) {
+        this.props.dispatch(navigateTo('/finder', true));          
+      }
+    }
+    
+    // Check if initial data is ready and navigate to finder when not in wide mode
+    if (this.props.categories.items.length === 0 && 
+      nextProps.categories && 
+      nextProps.categories.items.length > 0 &&
+      !this.props.layout.isWide) {
+      this.props.dispatch(navigateTo('/finder', true));
+    }
+  }
+  
+  _buildRouterRegistry() {
+    let routerRegistry = new RouterRegistry({
       initialRoute: { path: '/', title: '', component: () => Loading }
     });
     
-    let routes = [];
-    if (! this.state.isWide) {
-      routes.push({ path: '/finder', title: 'Find deals', component: () => Finder });
-    }
-
-    routes.push({ path: '/deals', title: 'Products', component: () => require('./deals/Products') });
-    routes.push({ path: '/listing', title: 'Listing', component: () => require('./deals/Listing'), sceneConfig: Navigator.SceneConfigs.FloatFromBottom });
-
-    registry.registerRoutes(routes);
-
-    return registry;
+    let routes = [
+      { path: '/finder', title: 'Find deals', component: () => Finder },
+      { path: '/deals', title: 'Products', component: () => require('./deals/Products') },
+      { path: '/listing', title: 'Listing', component: () => require('./deals/Listing'), sceneConfig: Navigator.SceneConfigs.FloatFromBottom }
+    ];
+    routerRegistry.registerRoutes(routes);
+    
+    return routerRegistry;
   }
 
   _renderScene(route, navigator){
@@ -47,18 +64,17 @@ class App extends React.Component {
   }
 
   _onViewLayout(event) {
-    const {x, y, width, height} = event.nativeEvent.layout;
-    this.setState({ isWide: width > 800 })
+    this.props.dispatch(changeLayout(event.nativeEvent.layout));
   }
   
   _renderLayout() {
-    if (this.state.isWide) {
+    if (this.props.layout.isWide) {
       return (
         <View style={styles.twocolumns}>
-          <Finder style={styles.side} categoriesStyle={styles.categories} />
+          <Finder style={styles.side} categoriesStyle={styles.twoColCategories} titleStyle={styles.twoColCategoriesTitle} />
           <Router
             currentRoute={this.props.currentRoute}
-            registry={this._getRouterRegistry()}
+            registry={this._routerRegistry}
             renderScene={this._renderScene}
             style={[styles.navigator, styles.main]}
             onRouteChanged={(route) => this.props.dispatch(didNavigateTo(route))}
@@ -69,7 +85,7 @@ class App extends React.Component {
       return (
         <Router
           currentRoute={this.props.currentRoute}
-          registry={this._getRouterRegistry()}
+          registry={this._routerRegistry}
           renderScene={this._renderScene}
           style={styles.navigator}
           onRouteChanged={(route) => this.props.dispatch(didNavigateTo(route))}
@@ -77,22 +93,7 @@ class App extends React.Component {
       )
     }
   }
-
-  componentDidMount() {
-    this.props.dispatch(fetchCategoriesIfNeeded());
-  }
-
-  componentWillReceiveProps(nextProps) {
-    // Check if initial data is ready and navigate to finder when not in wide mode
-    if (this.props.categories.items.length === 0 && 
-      nextProps.categories && 
-      nextProps.categories.items.length > 0 &&
-      !this.state.isWide) {
-      console.log('Received categories');
-      this.props.dispatch(navigateTo('/finder', true));
-    }
-  }
-  
+    
   render() {
     return (
       <View style={styles.container} onLayout={this._onViewLayout}>
@@ -100,8 +101,18 @@ class App extends React.Component {
       </View>
     )
   }
-
 }
+
+// Which part of the Redux global state does our component want to receive as props?
+function mapStateToProps(state) {
+  return {
+    currentRoute: state.router.currentRoute,
+    categories: state.finder.categories,
+    layout: state.layout
+  };
+}
+
+export default connect(mapStateToProps)(App);
 
 const styles = StyleSheet.create({
   container: {
@@ -119,20 +130,13 @@ const styles = StyleSheet.create({
   },
   side: {
   },
-  categories: {
+  twoColCategories: {
     backgroundColor: '#444'
+  },
+  twoColCategoriesTitle: {
+    color: '#eee'
   },
   main: {
     flex: 2
   }
 });
-
-// Which part of the Redux global state does our component want to receive as props?
-function mapStateToProps(state) {
-  return {
-    currentRoute: state.router.currentRoute,
-    categories: state.finder.categories
-  };
-}
-
-export default connect(mapStateToProps)(App);

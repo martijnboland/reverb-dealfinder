@@ -36,9 +36,11 @@ const selectedCategorySelector = (state) => state.finder.selectedCategory;
 const priceGuidesSelector = (state) => state.finder.priceGuides;
 const dealsListingsSelector = (state) => state.finder.dealsListings;
 const categoriesSelector = (state) => state.finder.categories;
+const isWideSelector = (state) => state.layout.isWide;
+
 export default createSelector(
-  [ searchTermSelector, selectedCategorySelector, priceGuidesSelector, dealsListingsSelector, categoriesSelector ],
-  (searchTerm, selectedCategory, allPriceGuides, dealsListings, categories) => {
+  [ searchTermSelector, selectedCategorySelector, priceGuidesSelector, dealsListingsSelector, categoriesSelector, isWideSelector ],
+  (searchTerm, selectedCategory, allPriceGuides, dealsListings, categories, isWide) => {
     const defaultPriceGuides = {
       items: []
     };
@@ -71,7 +73,8 @@ export default createSelector(
       deals: deals,
       title: createTitle(searchTerm, selectedCategory, categories, currentPriceGuides, deals),
       canLoadMoreDeals: canLoadMoreDeals(currentPriceGuides),
-      isLoading: isLoading(currentPriceGuides, dealsListings)
+      isLoading: isLoading(currentPriceGuides, dealsListings),
+      isWide: isWide
     }
   }
 )

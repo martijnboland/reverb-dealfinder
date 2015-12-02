@@ -40,7 +40,7 @@ export default class CategoryBrowser extends React.Component {
   render() {
     return (
       <View style={[styles.container, this.props.style]}>
-        <Text style={styles.title}>Browse deals by category</Text>
+        <Text style={[styles.title, this.props.titleStyle]}>Browse deals by category</Text>
         <ListView
           dataSource={this.state.dataSource}
           renderRow={this._renderRow}

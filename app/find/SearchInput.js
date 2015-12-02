@@ -38,7 +38,8 @@ const styles = StyleSheet.create({
     flex: 1,
     width: null,
     height: null,
-    justifyContent: 'center' 
+    justifyContent: 'center',
+    backgroundColor: colors.mainAccent
   },
   searchContainer: {
     padding: 10,

@@ -16,11 +16,13 @@ class Finder extends React.Component {
   }
   
   _onFindDealsForSearchTerm(searchTerm) {
+    this.props.dispatch(resetSearchTerm());
     this.props.dispatch(setSearchTerm(searchTerm));
     this.props.dispatch(navigateTo('/deals'));
   }
 
   _onFindDealsForCategory(selectedCategory) {
+    this.props.dispatch(resetSearchTerm());
     this.props.dispatch(selectCategory(selectedCategory));
     this.props.dispatch(navigateTo('/deals'));
   }
@@ -32,7 +34,7 @@ class Finder extends React.Component {
           <SearchInput searchTerm={this.props.searchTerm} onSearch={(searchTerm) => this._onFindDealsForSearchTerm(searchTerm)} />
         </View>
         <View style={styles.categorybrowser}>
-          <CategoryBrowser style={this.props.categoriesStyle} categories={this.props.categories} onSelectCategory={(category) => this._onFindDealsForCategory(category)} />
+          <CategoryBrowser style={this.props.categoriesStyle} titleStyle={this.props.titleStyle} categories={this.props.categories} onSelectCategory={(category) => this._onFindDealsForCategory(category)} />
         </View>
       </View>      
     );

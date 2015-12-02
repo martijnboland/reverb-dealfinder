@@ -65,7 +65,8 @@ class Router extends React.Component {
   }
   
   componentWillReceiveProps(nextProps) {
-    if (nextProps.currentRoute && (!this.props.currentRoute || this.props.currentRoute.path !== nextProps.currentRoute.path)) {
+    if (nextProps.currentRoute && 
+      (!this.props.currentRoute || this.props.currentRoute.path !== nextProps.currentRoute.path || nextProps.currentRoute.shouldReset)) {
       // change the current page to navigate
       this._navigateTo(nextProps.currentRoute);
     }
