@@ -69,7 +69,8 @@ export default class Products extends React.Component {
   
   _getMoreDeals() {
     if (! this.state.isLoading && this.props.canLoadMoreDeals) {
-      this.props.dispatch(findMoreDeals());    
+      // TODO: need to find a more efficient deal finder algorithm.
+      ///this.props.dispatch(findMoreDeals());    
     }
   }
 
