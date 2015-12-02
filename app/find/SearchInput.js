@@ -26,6 +26,8 @@ export default class SearchInput extends React.Component {
             onSubmitEditing={() => this.props.onSearch(this.state.searchTerm)}
             returnKeyType='search'
             value={this.state.searchTerm}
+            autoCapitalize='none'
+            autoCorrect={false}
           />
         </View>
       </Image>      
