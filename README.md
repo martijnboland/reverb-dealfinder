@@ -4,6 +4,9 @@ and [Redux](http://redux.js.org/) to find interesting deals on [Reverb.com](http
 ![Find](https://raw.githubusercontent.com/martijnboland/reverb-dealfinder/master/docs/screenshots/find.png)
 ![Deals](https://raw.githubusercontent.com/martijnboland/reverb-dealfinder/master/docs/screenshots/deals.png)
 
+![Find Tablet portrait](https://raw.githubusercontent.com/martijnboland/reverb-dealfinder/master/docs/screenshots/find-tablet-portrait.png)
+![Deals Tablet landscape](https://raw.githubusercontent.com/martijnboland/reverb-dealfinder/master/docs/screenshots/deals-tablet-landscape.png)
+
 # Getting Started
 
 ## Prerequisites
