@@ -1,7 +1,9 @@
-This an example app built with [React Native](https://facebook.github.io/react-native/) 
+This is an example app built with [React Native](https://facebook.github.io/react-native/) 
 and [Redux](http://redux.js.org/) for both iOS and Android to find interesting deals on [Reverb.com](https://reverb.com). 
 
-You can search for gear or browse categories. The app uses the Reverb price guide to determine the going rate of the instruments and the finds all listings with an interesting price. Viewing details of a listing takes you to the Reverb.com web site.
+You can search for gear or browse categories. The app uses the Reverb price guide to determine the going rate of the instruments and then finds all listings with an interesting price. Viewing details of a listing takes you to the Reverb.com web site.
+
+Note: since this is only an example app for developers, there are no guarantees whatsoever about the correctness of the search results. Do not use it for serious gear hunting :-).
 
 # Getting Started
 
