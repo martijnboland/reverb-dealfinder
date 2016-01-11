@@ -8,6 +8,8 @@ import { colors } from '../styles/global';
 
 import Loading from './Loading';
 import Finder from './find/Finder';
+import Products from './deals/Products';
+import Listing from './deals/Listing';
 
 class App extends React.Component {
   constructor(props) {
@@ -46,8 +48,8 @@ class App extends React.Component {
     
     let routes = [
       { path: '/finder', title: 'Find deals', component: () => Finder },
-      { path: '/deals', title: 'Products', component: () => require('./deals/Products') },
-      { path: '/listing', title: 'Listing', component: () => require('./deals/Listing'), sceneConfig: Navigator.SceneConfigs.FloatFromBottom }
+      { path: '/deals', title: 'Products', component: () => Products },
+      { path: '/listing', title: 'Listing', component: () => Listing, sceneConfig: Navigator.SceneConfigs.FloatFromBottom }
     ];
     routerRegistry.registerRoutes(routes);
     
