@@ -1,6 +1,5 @@
 import React, { View, Text, StyleSheet, TouchableOpacity, WebView, Platform } from 'react-native';
-import WebViewAndroid from 'react-native-webview-android';
-import { connect } from 'react-redux/native';
+import { connect } from 'react-redux';
 
 import { navigateTo } from '../shared/router/routerActions';
 import { colors, styles as globalStyles } from '../../styles/global';
@@ -12,19 +11,7 @@ export default class Listing extends React.Component {
 
     this._onClose = this._onClose.bind(this);
   }
-
-  _renderWebView() {
-    if (Platform.OS === 'android') {
-      return (
-    		<WebViewAndroid javaScriptEnabled={true} style={styles.webview} url={this.props.listingLink} builtInZoomControls={true} />
-      );
-    } else {
-      return (
-        <WebView style={styles.webview} url={this.props.listingLink} scalesPageToFit={true} />
-      );
-    }
-  }
-  
+    
   _onClose() {
     this.props.dispatch(navigateTo('/deals'));
   }
@@ -42,7 +29,7 @@ export default class Listing extends React.Component {
           <View style={globalStyles.navbarButton}>
           </View>
         </View>
-        {this._renderWebView()}
+        <WebView style={styles.webview} url={this.props.listingLink} scalesPageToFit={true} javaScriptEnabled={true} />
       </View>      
     );
   }

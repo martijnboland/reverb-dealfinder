@@ -1,5 +1,5 @@
 import React, { View, Text, StyleSheet, TouchableOpacity, ListView, Image, InteractionManager } from 'react-native';
-import { connect } from 'react-redux/native';
+import { connect } from 'react-redux';
 
 import { navigateTo } from '../shared/router/routerActions';
 import { findDealsForSearchTerm, findDealsForCategory, findMoreDeals, resetSearchTerm, resetCategory } from '../find/actions';

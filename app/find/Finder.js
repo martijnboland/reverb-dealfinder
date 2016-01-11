@@ -1,5 +1,5 @@
 import React, { View, Text, StyleSheet } from 'react-native';
-import { connect } from 'react-redux/native';
+import { connect } from 'react-redux';
 
 import SearchInput from './SearchInput';
 import CategoryBrowser from './CategoryBrowser';

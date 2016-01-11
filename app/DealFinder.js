@@ -1,5 +1,5 @@
 import React, { View, StyleSheet, Navigator } from 'react-native';
-import { connect } from 'react-redux/native';
+import { connect } from 'react-redux';
 
 import { Router, RouterRegistry, navigateTo, didNavigateTo } from './shared/router/Router';
 import { fetchCategoriesIfNeeded } from './find/actions';
