@@ -1,19 +1,21 @@
 import { expect } from 'chai';
+import mockery from 'mockery';
 import reactNativeStub from '../testsupport/react-native.js';
 //import DealFinder from './DealFinder';
 
-//DealFinder.__ReWire__('React', reactNativeStub);
-
-// Unable to properly use React Native Components in test scenario's because JavaScriptCore is not supported with Mocha
 describe.skip('DealFinder', () => {
-
+  let app;
+  
   before(() => {
+    mockery.enable();
+    mockery.registerMock('react-native', reactNativeStub);
   });
 
   afterEach(() => {
   });
 
   after(() => {
+    mockery.disable();
   });
 
   it('should instantiate ok', () => {
