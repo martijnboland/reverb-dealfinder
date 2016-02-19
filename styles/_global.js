@@ -33,7 +33,7 @@ export const styles = {
   },
   titleText: {
     fontSize: 18,
-    color: 'fff'
+    color: '#fff'
   },
   formInput: {
     height: 36,
